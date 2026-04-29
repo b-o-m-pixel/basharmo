@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      Hydra was launched from Kali Linux on the local network targeting SSH (port 22) on the Ubuntu host running Wazuh. The <strong>rockyou.txt</strong> wordlist simulates a real credential stuffing attack. Hydra fires multiple username/password combinations in rapid succession — exactly the pattern Wazuh's composite brute force rules are designed to detect. This screenshot captures the attack actively running, with attempts being fired at the target.
+      A brute-force attack was simulated using Hydra against the SSH service on the target system. The tool generates repeated login attempts using a password wordlist, creating high-frequency authentication failures typical of credential-based attacks.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -168,7 +168,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      Before relying on the SIEM, this confirms the attack reached the target at the OS level. <strong>/var/log/auth.log</strong> is Linux's native authentication log — every failed SSH login is recorded with timestamp, source IP, and attempted username. Grepping for <strong>"Failed password"</strong> isolates only failed attempts, showing Kali's IP repeating across many lines — the raw signature of a brute force. This is a foundational SOC skill: verifying host-level evidence independently of the SIEM.
+      The system authentication log (<strong>/var/log/auth.log</strong>) shows multiple failed SSH login attempts from a single source IP within a short timeframe. This confirms that the attack reached the host and provides raw evidence of brute-force activity.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -189,7 +189,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      Custom <strong>SSH Attack Monitor</strong> dashboard built from scratch in Wazuh, displaying the attack across four visualizations: a <strong>total alert count metric</strong>, a <strong>timeline bar chart</strong> showing the spike during the attack window, a <strong>data table of top attacking IPs</strong> confirming Kali's address, and a <strong>pie chart</strong> breaking down which SSH rules fired. Each visualization was created individually against the <strong>wazuh-alerts-4.x-*</strong> index with rule.groups filtered to sshd — this is active SIEM configuration, not passive monitoring.
+      A custom Wazuh dashboard visualizes the attack activity, including alert volume over time and the originating IP address. The spike in alerts during the attack window confirms that the SIEM successfully ingested and identified the abnormal authentication behavior.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -210,7 +210,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      Drilling into a single alert reveals the full event record: <strong>rule.id</strong>, <strong>rule.description</strong>, <strong>data.srcip</strong> confirming Kali's IP, precise <strong>timestamp</strong>, <strong>agent.name</strong>, and <strong>MITRE ATT&CK T1110</strong> mapping. This is the core SOC workflow — moving from dashboard overview down to a single event to confirm the threat and gather evidence for escalation. Understanding how to read a full alert record is what separates passive monitoring from actual analysis.
+      Expanding an individual alert reveals key details such as the rule triggered, source IP, timestamp, and MITRE ATT&CK classification (T1110 – Brute Force). This confirms the nature of the activity and provides the necessary context for investigation.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -231,47 +231,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      <strong>Rule 5760</strong> is the base SSH authentication failure rule — fires on every single failed login attempt. During the Hydra attack, each individual attempt triggers this rule, generating the high-volume alert flood visible in the timeline. This is the foundational signal: one failed login. Understanding this rule explains why alert volume is so high during a brute force and why analysts need composite rules to avoid alert fatigue.
-    </div>
-  </div>
-
-  <!-- 06 -->
-  <div class="screenshot-entry" style="margin-top:2.5rem">
-    <div class="shot-header">
-      <div class="shot-number">06</div>
-      <div>
-        <div class="shot-phase">Detection Logic</div>
-        <div class="shot-title">Rule 5758 — Maximum Authentication Attempts Exceeded</div>
-        <div class="shot-subtitle">Wazuh Management → Rules → 5758</div>
-      </div>
-    </div>
-    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 06 — Rule 5758: Maximum authentication attempts exceeded" data-src="projects/ssh-brute-force/06-rule-5758.png">
-      <div class="shot-placeholder">
-        <img src="detection_rule_5758.png" alt="Rule 5758" onerror="handleImgError(this)"/>
-      </div>
-    </div>
-    <div class="shot-explanation">
-      <strong>Rule 5758</strong> fires when the SSH daemon reports the per-connection retry limit has been exhausted. This is a higher-confidence signal than 5760 — it means the attacker hit the connection's maximum retry cap, a behavioral pattern distinct from a single wrong password. Seeing 5758 alongside 5760 confirms the attack is automated and persistent, not accidental.
-    </div>
-  </div>
-
-  <!-- 07 -->
-  <div class="screenshot-entry" style="margin-top:2.5rem">
-    <div class="shot-header">
-      <div class="shot-number">07</div>
-      <div>
-        <div class="shot-phase">Detection Logic</div>
-        <div class="shot-title">Rule 5763 — Brute Force Attempt Detected</div>
-        <div class="shot-subtitle">Wazuh Management → Rules → 5763 · MITRE T1110</div>
-      </div>
-    </div>
-    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 07 — Rule 5763: sshd brute force trying to get access" data-src="projects/ssh-brute-force/07-rule-5763.png">
-      <div class="shot-placeholder">
-        <img src="detection_rule_5763.png" alt="Rule 5763" onerror="handleImgError(this)"/>
-      </div>
-    </div>
-    <div class="shot-explanation">
-      <strong>Rule 5763</strong> is the high-confidence composite rule — it fires when Wazuh observes a threshold of failures from the same source IP within a defined time window. This maps directly to <strong>MITRE ATT&CK T1110 (Brute Force)</strong> and carries high severity, triggering escalation in a real SOC. Understanding how this rule aggregates lower-level events (5760, 5758) into a single high-confidence verdict is the key insight: this is how SIEM correlation reduces noise into actionable intelligence.
+      <strong>Rule 5760</strong> triggers on each failed SSH authentication attempt. During the attack, repeated failures generate a high volume of alerts, forming the base signal that indicates abnormal login activity.
     </div>
   </div>
 
