@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      A brute-force attack was simulated using Hydra against the SSH service on the target system. The tool generates repeated login attempts using a password wordlist, creating high-frequency authentication failures typical of credential-based attacks.
+      A brute-force attack was simulated using Hydra against the SSH service on the target system. The tool generates repeated login attempts using a password wordlist, creating high-frequency authentication failures typical of brute-force credential attacks.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -168,7 +168,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      The system authentication log (<strong>/var/log/auth.log</strong>) shows multiple failed SSH login attempts from a single source IP within a short timeframe. This confirms that the attack reached the host and provides raw evidence of brute-force activity.
+      The system authentication log (<strong>/var/log/auth.log</strong>) shows multiple failed SSH login attempts from a single source IP within a short timeframe, indicating automated activity. This confirms that the attack reached the host and provides raw evidence of brute-force activity.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -189,7 +189,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      A custom Wazuh dashboard visualizes the attack activity, including alert volume over time and the originating IP address. The spike in alerts during the attack window confirms that the SIEM successfully ingested and identified the abnormal authentication behavior.
+      A custom Wazuh dashboard visualizes the attack activity, including alert volume over time and the originating IP address responsible for the activity. The spike in alerts during the attack window confirms that the SIEM successfully ingested and identified the abnormal authentication behavior.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -210,7 +210,7 @@
       </div>
     </div>
     <div class="shot-explanation">
-      Expanding an individual alert reveals key details such as the rule triggered, source IP, timestamp, and MITRE ATT&CK classification (T1110 – Brute Force). This confirms the nature of the activity and provides the necessary context for investigation.
+      Expanding an individual alert reveals key details such as the rule triggered, source IP, timestamp, and MITRE ATT&CK classification (T1110 – Brute Force). This confirms the nature of the activity and provides the necessary context to validate and investigate the threat.
     </div>
   </div>
   <div class="shot-divider"></div>
@@ -231,14 +231,14 @@
       </div>
     </div>
     <div class="shot-explanation">
-      <strong>Rule 5760</strong> triggers on each failed SSH authentication attempt. During the attack, repeated failures generate a high volume of alerts, forming the base signal that indicates abnormal login activity.
+      <strong>Rule 5760</strong> triggers on each failed SSH authentication attempt. During the attack, repeated failures generate a high volume of alerts, forming the base signal used to identify abnormal authentication patterns during the attack.
     </div>
   </div>
 
 </div>
 
 <footer>
-  © 2026 Bashar Mohamed Omar — Kigali, Rwanda — <a href="../index.html">← Back to Portfolio</a>
+  © 2026 Bashar Mohamed Omar — Kigali, Rwanda — <a href="../../index.html">← Back to Portfolio</a>
 </footer>
 
 <script>
