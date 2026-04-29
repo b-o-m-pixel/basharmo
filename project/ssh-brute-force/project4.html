@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SSH Brute Force Detection Lab — Bashar Mohamed Omar</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0d1117;
+    --border: #1a2a3a;
+    --accent: #00d4ff;
+    --accent2: #0a8fff;
+    --green: #00ff88;
+    --red: #ff4d6d;
+    --text: #c9d8e8;
+    --muted: #4a6580;
+    --heading: #e8f4ff;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+  body::after { content: ''; position: fixed; top: -100%; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.3; animation: scan 8s linear infinite; pointer-events: none; z-index: 1; }
+  @keyframes scan { to { top: 200%; } }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; background: rgba(8,12,16,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-logo { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; text-decoration: none; }
+  .nav-back { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent); }
+
+  .wrap { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; padding: 0 3rem; }
+
+  .project-hero { padding-top: 8rem; padding-bottom: 3rem; }
+  .project-tag { font-family: var(--mono); font-size: 0.7rem; color: var(--green); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem; }
+  .project-tag::before { content: ''; width: 24px; height: 1px; background: var(--green); display: inline-block; }
+  .project-hero h1 { font-family: var(--sans); font-weight: 800; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--heading); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+  .project-hero h1 span { color: var(--accent); }
+  .project-summary { font-size: 0.95rem; color: var(--text); max-width: 680px; line-height: 1.85; margin-bottom: 2rem; }
+  .meta-row { display: flex; gap: 2rem; flex-wrap: wrap; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .meta-item { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+  .meta-item strong { display: block; color: var(--accent); margin-bottom: 0.2rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; }
+
+  .chain-flow { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin: 3rem 0 3.5rem; }
+  .chain-step { font-family: var(--mono); font-size: 0.65rem; padding: 0.4rem 0.85rem; border: 1px solid var(--border); color: var(--muted); letter-spacing: 0.08em; }
+  .chain-step.active { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); }
+  .chain-arrow { font-family: var(--mono); color: var(--border); font-size: 0.85rem; }
+
+  .screenshot-entry { margin-bottom: 4rem; }
+  .shot-header { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.25rem; }
+  .shot-number { font-family: var(--mono); font-size: 2rem; color: var(--border); line-height: 1; flex-shrink: 0; width: 3rem; }
+  .shot-phase { font-family: var(--mono); font-size: 0.62rem; color: var(--green); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.35rem; }
+  .shot-title { font-family: var(--sans); font-weight: 700; font-size: 1.15rem; color: var(--heading); margin-bottom: 0.2rem; }
+  .shot-subtitle { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); }
+
+  .shot-image-wrap { border: 1px solid var(--border); background: var(--surface); position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.3s; margin-bottom: 0; }
+  .shot-image-wrap:hover { border-color: var(--accent); }
+  .shot-image-wrap::after { content: '⤢ EXPAND'; position: absolute; top: 0.75rem; right: 0.75rem; font-family: var(--mono); font-size: 0.58rem; color: var(--accent); letter-spacing: 0.15em; background: rgba(8,12,16,0.85); padding: 0.2rem 0.5rem; opacity: 0; transition: opacity 0.2s; }
+  .shot-image-wrap:hover::after { opacity: 1; }
+
+  .shot-placeholder { width: 100%; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; background: linear-gradient(135deg, #0d1117 0%, #0a1520 100%); }
+  .shot-placeholder img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .placeholder-inner { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 3rem; }
+  .placeholder-icon { font-size: 2rem; opacity: 0.25; }
+  .placeholder-text { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; text-align: center; line-height: 1.9; }
+  .placeholder-path { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); opacity: 0.5; }
+
+  .shot-explanation { font-size: 0.88rem; color: var(--text); line-height: 1.85; padding: 1.25rem 1.5rem; border: 1px solid var(--border); border-top: none; background: rgba(13,17,23,0.5); }
+  .shot-explanation strong { color: var(--accent); }
+
+  .shot-divider { width: 100%; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); margin: 4rem 0 0; opacity: 0.2; }
+
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; cursor: pointer; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border: 1px solid var(--border); }
+  .lightbox-placeholder { max-width: 600px; width: 100%; aspect-ratio: 16/9; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; }
+  .lightbox-close { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); cursor: pointer; transition: color 0.2s; letter-spacing: 0.12em; }
+  .lightbox-close:hover { color: var(--accent); }
+
+  footer { position: relative; z-index: 2; text-align: center; padding: 3rem 2rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); border-top: 1px solid var(--border); letter-spacing: 0.1em; }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .screenshot-entry { animation: fadeUp 0.6s ease both; }
+
+  @media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .wrap { padding-left: 1.5rem; padding-right: 1.5rem; } .shot-header { flex-direction: column; gap: 0.5rem; } .chain-flow { gap: 0.3rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">// bashar.omar</a>
+  <a href="../index.html" class="nav-back">← Portfolio</a>
+</nav>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close">ESC / CLICK TO CLOSE</div>
+  <img id="lb-img" src="" alt="" style="display:none"/>
+  <div class="lightbox-placeholder" id="lb-placeholder" style="display:none">
+    <div style="font-size:2rem;opacity:0.25">🖼</div>
+    <div id="lb-label" style="font-family:var(--mono);font-size:0.75rem;color:var(--muted);text-align:center;line-height:1.8;padding:0 2rem"></div>
+  </div>
+</div>
+
+<div class="wrap project-hero">
+  <div class="project-tag">Project // 004 · Blue Team · SOC Operations</div>
+  <h1>SSH Brute Force<br/><span>Detection Lab</span></h1>
+  <p class="project-summary">Full attack-to-detection pipeline: simulated a real SSH brute force attack using Hydra on Kali Linux, captured host-level evidence via auth.log, and monitored the entire event through a custom Wazuh SIEM dashboard — tracing individual alerts back to the exact detection rules that fired them.</p>
+  <div class="meta-row">
+    <div class="meta-item"><strong>Category</strong>Blue Team / SOC</div>
+    <div class="meta-item"><strong>Tools</strong>Wazuh · Kali · Hydra · SSH</div>
+    <div class="meta-item"><strong>MITRE</strong>T1110 — Brute Force</div>
+    <div class="meta-item"><strong>Evidence</strong>7 Screenshots</div>
+    <div class="meta-item"><strong>Status</strong>Completed · 2026</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="chain-flow">
+    <div class="chain-step active">01 · ATTACK</div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step active">02 · HOST LOG</div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step active">03 · SIEM</div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step active">04 · ALERT</div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step active">05–07 · RULES</div>
+  </div>
+
+  <!-- 01 -->
+  <div class="screenshot-entry">
+    <div class="shot-header">
+      <div class="shot-number">01</div>
+      <div>
+        <div class="shot-phase">Attack Simulation</div>
+        <div class="shot-title">Hydra SSH Brute Force — Kali Linux</div>
+        <div class="shot-subtitle">hydra · rockyou.txt wordlist · target port 22</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 01 — Hydra running on Kali Linux" data-src="projects/ssh-brute-force/01-hydra-kali.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/01-hydra-kali.png" alt="Hydra brute force on Kali" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      Hydra was launched from Kali Linux on the local network targeting SSH (port 22) on the Ubuntu host running Wazuh. The <strong>rockyou.txt</strong> wordlist simulates a real credential stuffing attack. Hydra fires multiple username/password combinations in rapid succession — exactly the pattern Wazuh's composite brute force rules are designed to detect. This screenshot captures the attack actively running, with attempts being fired at the target.
+    </div>
+  </div>
+  <div class="shot-divider"></div>
+
+  <!-- 02 -->
+  <div class="screenshot-entry" style="margin-top:4rem">
+    <div class="shot-header">
+      <div class="shot-number">02</div>
+      <div>
+        <div class="shot-phase">Host-Level Evidence</div>
+        <div class="shot-title">auth.log — Failed Password Entries</div>
+        <div class="shot-subtitle">grep "Failed password" /var/log/auth.log</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 02 — auth.log Failed Password grep" data-src="projects/ssh-brute-force/02-authlog-grep.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/02-authlog-grep.png" alt="auth.log grep output" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      Before relying on the SIEM, this confirms the attack reached the target at the OS level. <strong>/var/log/auth.log</strong> is Linux's native authentication log — every failed SSH login is recorded with timestamp, source IP, and attempted username. Grepping for <strong>"Failed password"</strong> isolates only failed attempts, showing Kali's IP repeating across many lines — the raw signature of a brute force. This is a foundational SOC skill: verifying host-level evidence independently of the SIEM.
+    </div>
+  </div>
+  <div class="shot-divider"></div>
+
+  <!-- 03 -->
+  <div class="screenshot-entry" style="margin-top:4rem">
+    <div class="shot-header">
+      <div class="shot-number">03</div>
+      <div>
+        <div class="shot-phase">SIEM Detection</div>
+        <div class="shot-title">Wazuh SSH Attack Monitor Dashboard</div>
+        <div class="shot-subtitle">Custom dashboard · 4 visualizations · wazuh-alerts-4.x-* index</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 03 — Wazuh SSH Attack Monitor Dashboard" data-src="projects/ssh-brute-force/03-wazuh-dashboard.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/03-wazuh-dashboard.png" alt="Wazuh SSH Dashboard" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      Custom <strong>SSH Attack Monitor</strong> dashboard built from scratch in Wazuh, displaying the attack across four visualizations: a <strong>total alert count metric</strong>, a <strong>timeline bar chart</strong> showing the spike during the attack window, a <strong>data table of top attacking IPs</strong> confirming Kali's address, and a <strong>pie chart</strong> breaking down which SSH rules fired. Each visualization was created individually against the <strong>wazuh-alerts-4.x-*</strong> index with rule.groups filtered to sshd — this is active SIEM configuration, not passive monitoring.
+    </div>
+  </div>
+  <div class="shot-divider"></div>
+
+  <!-- 04 -->
+  <div class="screenshot-entry" style="margin-top:4rem">
+    <div class="shot-header">
+      <div class="shot-number">04</div>
+      <div>
+        <div class="shot-phase">Alert Investigation</div>
+        <div class="shot-title">Expanded Alert — Full Event Detail</div>
+        <div class="shot-subtitle">rule.id · data.srcip · timestamp · MITRE ATT&CK mapping</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 04 — Expanded Wazuh alert detail view" data-src="projects/ssh-brute-force/04-alert-detail.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/04-alert-detail.png" alt="Expanded Wazuh alert detail" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      Drilling into a single alert reveals the full event record: <strong>rule.id</strong>, <strong>rule.description</strong>, <strong>data.srcip</strong> confirming Kali's IP, precise <strong>timestamp</strong>, <strong>agent.name</strong>, and <strong>MITRE ATT&CK T1110</strong> mapping. This is the core SOC workflow — moving from dashboard overview down to a single event to confirm the threat and gather evidence for escalation. Understanding how to read a full alert record is what separates passive monitoring from actual analysis.
+    </div>
+  </div>
+  <div class="shot-divider"></div>
+
+  <!-- 05 -->
+  <div class="screenshot-entry" style="margin-top:4rem">
+    <div class="shot-header">
+      <div class="shot-number">05</div>
+      <div>
+        <div class="shot-phase">Detection Logic</div>
+        <div class="shot-title">Rule 5760 — sshd: Authentication Failed</div>
+        <div class="shot-subtitle">Wazuh Management → Rules → 5760</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 05 — Rule 5760: sshd authentication failed" data-src="projects/ssh-brute-force/05-rule-5760.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/05-rule-5760.png" alt="Rule 5760" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      <strong>Rule 5760</strong> is the base SSH authentication failure rule — fires on every single failed login attempt. During the Hydra attack, each individual attempt triggers this rule, generating the high-volume alert flood visible in the timeline. This is the foundational signal: one failed login. Understanding this rule explains why alert volume is so high during a brute force and why analysts need composite rules to avoid alert fatigue.
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="screenshot-entry" style="margin-top:2.5rem">
+    <div class="shot-header">
+      <div class="shot-number">06</div>
+      <div>
+        <div class="shot-phase">Detection Logic</div>
+        <div class="shot-title">Rule 5758 — Maximum Authentication Attempts Exceeded</div>
+        <div class="shot-subtitle">Wazuh Management → Rules → 5758</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 06 — Rule 5758: Maximum authentication attempts exceeded" data-src="projects/ssh-brute-force/06-rule-5758.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/06-rule-5758.png" alt="Rule 5758" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      <strong>Rule 5758</strong> fires when the SSH daemon reports the per-connection retry limit has been exhausted. This is a higher-confidence signal than 5760 — it means the attacker hit the connection's maximum retry cap, a behavioral pattern distinct from a single wrong password. Seeing 5758 alongside 5760 confirms the attack is automated and persistent, not accidental.
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="screenshot-entry" style="margin-top:2.5rem">
+    <div class="shot-header">
+      <div class="shot-number">07</div>
+      <div>
+        <div class="shot-phase">Detection Logic</div>
+        <div class="shot-title">Rule 5763 — Brute Force Attempt Detected</div>
+        <div class="shot-subtitle">Wazuh Management → Rules → 5763 · MITRE T1110</div>
+      </div>
+    </div>
+    <div class="shot-image-wrap" onclick="openLightbox(this)" data-label="Screenshot 07 — Rule 5763: sshd brute force trying to get access" data-src="projects/ssh-brute-force/07-rule-5763.png">
+      <div class="shot-placeholder">
+        <img src="projects/ssh-brute-force/07-rule-5763.png" alt="Rule 5763" onerror="handleImgError(this)"/>
+      </div>
+    </div>
+    <div class="shot-explanation">
+      <strong>Rule 5763</strong> is the high-confidence composite rule — it fires when Wazuh observes a threshold of failures from the same source IP within a defined time window. This maps directly to <strong>MITRE ATT&CK T1110 (Brute Force)</strong> and carries high severity, triggering escalation in a real SOC. Understanding how this rule aggregates lower-level events (5760, 5758) into a single high-confidence verdict is the key insight: this is how SIEM correlation reduces noise into actionable intelligence.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Bashar Mohamed Omar — Kigali, Rwanda — <a href="../index.html">← Back to Portfolio</a>
+</footer>
+
+<script>
+function handleImgError(img) {
+  img.style.display = 'none';
+  const wrap = img.closest('.shot-placeholder');
+  const entry = img.closest('.shot-image-wrap');
+  const label = entry.dataset.label || '';
+  const path = entry.dataset.src || '';
+  const icons = {'01':'⚔️','02':'📋','03':'📊','04':'🔍','05':'📜','06':'📜','07':'📜'};
+  const num = label.match(/\d+/)?.[0] || '0';
+  const icon = icons[num.padStart(2,'0')] || '🖼';
+  wrap.innerHTML = `<div class="placeholder-inner"><div class="placeholder-icon">${icon}</div><div class="placeholder-text">${label}</div><div class="placeholder-path">${path}</div></div>`;
+}
+
+function openLightbox(el) {
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbPh = document.getElementById('lb-placeholder');
+  const lbLabel = document.getElementById('lb-label');
+  const img = el.querySelector('img');
+  const label = el.dataset.label || '';
+
+  if (img && img.complete && img.naturalWidth > 0 && img.style.display !== 'none') {
+    lbImg.src = img.src;
+    lbImg.style.display = 'block';
+    lbPh.style.display = 'none';
+  } else {
+    lbImg.style.display = 'none';
+    lbPh.style.display = 'flex';
+    lbLabel.textContent = label + '\n\nPlace your screenshot at:\n' + (el.dataset.src || '');
+  }
+  lb.classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
