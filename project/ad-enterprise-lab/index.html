@@ -1,5 +1,802 @@
 <!DOCTYPE html>
-<html>
-  <head></head>
-  <body></body>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Active Directory Enterprise Lab — Bashar Mohamed Omar</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:        #080c10;
+  --surface:   #0d1117;
+  --surface-2: #101820;
+  --border:    #1a2a3a;
+  --border-2:  #243444;
+  --accent:    #00d4ff;
+  --accent-2:  #0a8fff;
+  --green:     #00ff88;
+  --text:      #c9d8e8;
+  --muted:     #4a6580;
+  --heading:   #e8f4ff;
+  --mono:      'Share Tech Mono', monospace;
+  --sans:      'Syne', sans-serif;
+  --max-w:     860px;
+  --gutter:    3rem;
+}
+
+/* ── RESET ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ── GRID BG ────────────────────────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SCAN LINE ──────────────────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -100%;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+  animation: scan 10s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes scan { to { top: 200%; } }
+
+/* ── FOCUS ──────────────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ── LAYOUT WRAPPER ─────────────────────────────────────────────────────── */
+.page {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ── NAV ────────────────────────────────────────────────────────────────── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(8,12,16,0.9);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.back-link {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+.back-link::before { content: '←'; }
+
+.top-bar-meta {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--border-2);
+  letter-spacing: 0.15em;
+}
+
+/* ── PROJECT HEADER ─────────────────────────────────────────────────────── */
+.project-header {
+  padding: 8rem 0 4rem;
+  border-bottom: 1px solid var(--border);
+}
+.project-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--green);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.project-label::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--green);
+  display: inline-block;
+  flex-shrink: 0;
+}
+.project-header h1 {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  color: var(--heading);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.5rem;
+}
+.project-header h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.project-intro {
+  font-size: 1rem;
+  color: var(--text);
+  max-width: 620px;
+  line-height: 1.85;
+  opacity: 0.85;
+  margin-bottom: 2rem;
+}
+
+/* ── META ROW ───────────────────────────────────────────────────────────── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.meta-cell {
+  background: var(--surface-2);
+  padding: 1rem 1.25rem;
+}
+.meta-key {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+.meta-val {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  display: block;
+}
+
+/* ── TOC ────────────────────────────────────────────────────────────────── */
+.toc-block {
+  margin: 3rem 0 0;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.toc-heading {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.toc-list {
+  list-style: none;
+  columns: 2;
+  column-gap: 2rem;
+}
+.toc-list li {
+  margin-bottom: 0.4rem;
+}
+.toc-list a {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.toc-list a:hover { color: var(--accent); }
+.toc-num {
+  font-size: 0.58rem;
+  color: var(--border-2);
+  min-width: 1.5rem;
+}
+
+/* ── MAIN CONTENT ───────────────────────────────────────────────────────── */
+main { padding: 5rem 0; }
+
+/* ── SECTION ────────────────────────────────────────────────────────────── */
+.lab-section {
+  margin-bottom: 5rem;
+  padding-top: 1rem;
+}
+.lab-section:last-child { margin-bottom: 0; }
+
+/* Section heading with index number */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--border-2);
+  letter-spacing: 0.12em;
+  flex-shrink: 0;
+  padding-top: 0.25rem;
+}
+.section-head h2 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--heading);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+/* Accent rule on the section heading left */
+.section-head::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 1.3rem;
+  background: var(--accent);
+  flex-shrink: 0;
+  align-self: center;
+  opacity: 0.6;
+}
+
+/* ── SECTION TEXT ───────────────────────────────────────────────────────── */
+.section-text {
+  font-size: 0.92rem;
+  color: var(--text);
+  line-height: 1.85;
+  opacity: 0.88;
+}
+
+/* ── PLACEHOLDER PARAGRAPH ──────────────────────────────────────────────── */
+.placeholder-text {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid var(--border-2);
+  background: rgba(0,0,0,0.15);
+}
+
+/* ── IMAGE PLACEHOLDER ──────────────────────────────────────────────────── */
+.img-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  background: var(--surface-2);
+  border: 1px dashed var(--border-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(0,212,255,0.02) 0%, transparent 60%);
+}
+.img-placeholder-icon {
+  font-size: 1.5rem;
+  opacity: 0.2;
+}
+.img-placeholder-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--border-2);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.img-placeholder-sub {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--border);
+  letter-spacing: 0.12em;
+}
+
+/* Compact image placeholder variant */
+.img-placeholder.compact {
+  aspect-ratio: 16 / 5;
+}
+
+/* ── CONTENT BODY ───────────────────────────────────────────────────────── */
+.section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── CALLOUT BOX ────────────────────────────────────────────────────────── */
+.callout {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-left: 3px solid var(--accent);
+}
+.callout p {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  font-style: italic;
+}
+
+/* ── BULLET LIST ────────────────────────────────────────────────────────── */
+.detail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.detail-list li {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.7;
+}
+.detail-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.6rem;
+  top: 0.35rem;
+  opacity: 0.6;
+}
+
+/* ── DIVIDER ────────────────────────────────────────────────────────────── */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+  margin: 0 0 5rem;
+  opacity: 0.6;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────────────────── */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 2rem var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.footer-back {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: opacity 0.2s;
+}
+.footer-back:hover { opacity: 0.7; }
+
+/* ── SCROLLBAR ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-2); }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── REDUCED MOTION ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; }
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  :root { --gutter: 1.5rem; }
+  .top-bar { padding: 1rem 1.5rem; }
+  .toc-list { columns: 1; }
+  .meta-grid { grid-template-columns: 1fr 1fr; }
+  .site-footer { flex-direction: column; align-items: flex-start; }
+}
+
+.img-block { margin: 1.5rem 0; }
+.img-block img { width: 100%; border: 1px solid var(--border); display: block; }
+.img-caption { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.4rem; letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar" role="banner">
+  <a href="../index.html" class="back-link" aria-label="Back to portfolio">Portfolio</a>
+  <span class="top-bar-meta" aria-hidden="true">// CASE STUDY · ACTIVE DIRECTORY</span>
+</header>
+
+<!-- PAGE WRAPPER -->
+<div class="page">
+
+  <!-- PROJECT HEADER -->
+  <header class="project-header">
+    <p class="project-label">Project · Infrastructure · Windows Server</p>
+    <h1>Active Directory<br/><em>Enterprise Lab</em></h1>
+    <p class="project-intro">
+      Built a multi-machine virtualized environment replicating a small enterprise identity infrastructure. Windows Server 2016 acts as the Domain Controller, handling authentication, DNS, and policy enforcement. A Windows 11 client and an Ubuntu server extend the lab across platforms, demonstrating real-world domain integration and cross-system communication patterns.
+    </p>
+
+    <!-- META -->
+    <dl class="meta-grid" aria-label="Project metadata">
+      <div class="meta-cell">
+        <dt class="meta-key">Status</dt>
+        <dd class="meta-val">Completed</dd>
+      </div>
+      <div class="meta-cell">
+        <dt class="meta-key">Platform</dt>
+        <dd class="meta-val">VirtualBox</dd>
+      </div>
+      <div class="meta-cell">
+        <dt class="meta-key">OS</dt>
+        <dd class="meta-val">Windows Server 2016</dd>
+      </div>
+      <div class="meta-cell">
+        <dt class="meta-key">Category</dt>
+        <dd class="meta-val">Identity & Access</dd>
+      </div>
+      <div class="meta-cell">
+        <dt class="meta-key">Year</dt>
+        <dd class="meta-val">2026</dd>
+      </div>
+      <div class="meta-cell">
+        <dt class="meta-key">MITRE</dt>
+        <dd class="meta-val">TA0003 · TA0004</dd>
+      </div>
+    </dl>
+
+    <!-- TABLE OF CONTENTS -->
+    <nav class="toc-block" aria-label="Page sections">
+      <p class="toc-heading">// Contents</p>
+      <ol class="toc-list" role="list">
+        <li><a href="#s01"><span class="toc-num">01</span>Project Overview</a></li>
+        <li><a href="#s02"><span class="toc-num">02</span>Architecture &amp; Network Design</a></li>
+        <li><a href="#s03"><span class="toc-num">03</span>Windows Server Setup</a></li>
+        <li><a href="#s04"><span class="toc-num">04</span>Active Directory Deployment</a></li>
+        <li><a href="#s05"><span class="toc-num">05</span>Identity Structure</a></li>
+        <li><a href="#s06"><span class="toc-num">06</span>Security Enforcement</a></li>
+        <li><a href="#s07"><span class="toc-num">07</span>Domain Integration &amp; Validation</a></li>
+        <li><a href="#s08"><span class="toc-num">08</span>Cross-System Communication</a></li>
+        <li><a href="#s09"><span class="toc-num">09</span>Ubuntu Server Role</a></li>
+        <li><a href="#s10"><span class="toc-num">10</span>Key Learnings</a></li>
+        <li><a href="#s11"><span class="toc-num">11</span>Future Improvements</a></li>
+      </ol>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content" aria-label="Project write-up">
+
+    <!-- 01 · PROJECT OVERVIEW -->
+    <section class="lab-section" id="s01" aria-labelledby="h-s01">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2 id="h-s01">Project Overview</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">This lab replicates the identity and access management layer of a small enterprise network. Active Directory centralizes authentication, authorization, and policy enforcement across domain-joined systems. The goal was to build hands-on familiarity with AD architecture, understand the security controls it provides, and recognize the failure points an attacker or misconfiguration could exploit.</p>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 02 · ARCHITECTURE & NETWORK DESIGN -->
+    <section class="lab-section" id="s02" aria-labelledby="h-s02">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 id="h-s02">Architecture &amp; Network Design</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">The lab runs on an isolated internal VirtualBox network (lab-net), fully segmented from the host machine and internet. Network isolation is deliberate: it prevents traffic leakage, constrains the blast radius of any misconfiguration, and mirrors the segmented design used in real enterprise environments. All addressing is static to eliminate DHCP as a variable during troubleshooting.</p>
+
+        <ul class="detail-list" aria-label="Architecture components">
+          <li>Internal VirtualBox network (lab-net) — no host or internet exposure</li>
+          <li>Domain Controller: 192.168.10.2 — Windows Server 2016, authoritative DNS for lab.local</li>
+          <li>Ubuntu Server: 192.168.10.1 — static IP via Netplan, non-domain endpoint</li>
+          <li>Windows 11 Client: domain-joined workstation, DHCP issued by DC</li>
+          <li>All DNS queries for lab.local resolved exclusively by the Domain Controller</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 03 · WINDOWS SERVER SETUP -->
+    <section class="lab-section" id="s03" aria-labelledby="h-s03">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <h2 id="h-s03">Windows Server Setup</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Pre-role configuration is critical in a domain environment — a server with an inconsistent hostname or incorrect DNS settings will fail DC promotion or cause downstream authentication issues. Static IP assignment and self-referencing DNS were configured before any roles were deployed.</p>
+
+        <div class="img-block">
+          <img src="assets/windows_server_2016/server_manager_dashboard_5.png" alt="Server Manager dashboard confirming clean post-install state before role deployment" loading="lazy"/>
+          <p class="img-caption">// Server Manager — confirmed clean state prior to role deployment</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/windows_server_2016/network_configuration_7.png" alt="Static IP 192.168.10.2 and DNS self-reference configured on Domain Controller" loading="lazy"/>
+          <p class="img-caption">// Static IP and DNS self-reference — prerequisite for AD DS promotion</p>
+        </div>
+
+        <ul class="detail-list" aria-label="Setup steps">
+          <li>Installed Windows Server 2016 Standard (Desktop Experience)</li>
+          <li>Assigned static IP 192.168.10.2; DNS pointed to itself (127.0.0.1 / 192.168.10.2)</li>
+          <li>Renamed server to an enterprise-consistent hostname before promotion</li>
+          <li>Verified system baseline via Server Manager before deploying any roles</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 04 · ACTIVE DIRECTORY DEPLOYMENT -->
+    <section class="lab-section" id="s04" aria-labelledby="h-s04">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <h2 id="h-s04">Active Directory Deployment</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Promoting a server to Domain Controller establishes it as the authoritative identity provider for the domain. All subsequent authentication, group policy application, and domain join operations depend on this single system. DNS integration during promotion is automatic but requires a correctly configured network adapter — misalignment here is the most common cause of post-promotion failures.</p>
+
+        <div class="img-block">
+          <img src="assets/windows_server_2016/domain_name_input_11.png" alt="Domain name lab.local entered during Active Directory Domain Services promotion wizard" loading="lazy"/>
+          <p class="img-caption">// Domain namespace defined as lab.local during DC promotion</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/windows_server_2016/ad_ds_installation_complete_10.png" alt="Active Directory Domain Services role installation completed successfully" loading="lazy"/>
+          <p class="img-caption">// AD DS role installation completed — server ready for domain controller promotion</p>
+        </div>
+
+        <div class="callout">
+          <p>Domain: lab.local — DNS forward lookup zone created automatically during promotion and bound to the DC's resolver. Post-deployment verification performed through Active Directory Users &amp; Computers and DNS Manager to confirm zone integrity and service health.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 05 · IDENTITY STRUCTURE -->
+    <section class="lab-section" id="s05" aria-labelledby="h-s05">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <h2 id="h-s05">Identity Structure (OUs, Users, Groups)</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">The identity model implements a lightweight RBAC structure: Organizational Units define administrative boundaries, security groups enforce access control, and user accounts map to roles within those groups. This structure mirrors production AD design — it also defines the attack surface for credential-based attacks and determines the blast radius of a compromised account.</p>
+
+        <div class="img-block">
+          <img src="assets/windows_server_2016/top_level_ous_16.png" alt="Hierarchical Organizational Unit structure showing department-level OUs in Active Directory Users and Computers" loading="lazy"/>
+          <p class="img-caption">// OU hierarchy — department-level boundaries for policy and access control scope</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/windows_server_2016/users_creation_19.png" alt="Domain user accounts created with role-based naming within an Organizational Unit" loading="lazy"/>
+          <p class="img-caption">// Domain user accounts created with role-aligned naming and OU placement</p>
+        </div>
+
+        <ul class="detail-list" aria-label="Identity components">
+          <li>Hierarchical OU structure: Departments &rarr; Sub-OUs per team — controls GPO scope and delegation boundaries</li>
+          <li>User accounts created with role-based naming to simulate an organizational identity model</li>
+          <li>Security groups used as access control boundaries — group membership drives permissions, not individual accounts</li>
+          <li>Users assigned to groups to simulate RBAC — privilege is granted at group level, not per-user</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 06 · SECURITY ENFORCEMENT -->
+    <section class="lab-section" id="s06" aria-labelledby="h-s06">
+      <div class="section-head">
+        <span class="section-num">06</span>
+        <h2 id="h-s06">Security Enforcement (Group Policy)</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Group Policy is the primary mechanism for enforcing security baselines across domain-joined systems at scale. Rather than configuring individual machines, GPOs push consistent controls from the DC to every enrolled endpoint. From a blue team perspective, GPO misconfigurations or overly permissive policies are a common source of privilege escalation paths.</p>
+
+        <div class="img-block">
+          <img src="assets/windows_server_2016/group_policy_management_console_21.png" alt="Group Policy Management Console showing GPO structure linked to domain and organizational units" loading="lazy"/>
+          <p class="img-caption">// GPMC — GPO structure linked to domain and OU hierarchy for scoped enforcement</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/windows_server_2016/password_policy_22.png" alt="Domain-wide password policy enforcing complexity, minimum length, and expiration requirements" loading="lazy"/>
+          <p class="img-caption">// Password policy — complexity, length, and expiration requirements enforced domain-wide</p>
+        </div>
+
+        <ul class="detail-list" aria-label="Enforced policies">
+          <li>Password policy: minimum length, complexity requirements, and expiration — reduces credential guessing exposure</li>
+          <li>Account lockout policy: threshold and observation window configured to limit brute force attempts</li>
+          <li>User restriction GPOs: control panel and system configuration access removed from standard accounts</li>
+          <li>All policy objects managed and linked through GPMC — changes propagate at next Group Policy refresh cycle</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 07 · DOMAIN INTEGRATION & VALIDATION -->
+    <section class="lab-section" id="s07" aria-labelledby="h-s07">
+      <div class="section-head">
+        <span class="section-num">07</span>
+        <h2 id="h-s07">Domain Integration &amp; Validation</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Domain join and policy application were validated end-to-end, not assumed. In production environments, unapplied policies are a significant security gap — enforcing the right controls and then verifying they are active on endpoints are two separate actions. <code>gpresult</code> provides a direct view of which policies are in effect and which were filtered or blocked.</p>
+
+        <div class="img-block">
+          <img src="assets/windows_11_client/domain_login_3.png" alt="Windows 11 client successfully authenticated using domain credentials from lab.local" loading="lazy"/>
+          <p class="img-caption">// Domain login confirmed — client authenticated against lab.local using AD credentials</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/windows_server_2016/gpresult_25.png" alt="gpresult /r output on domain-joined client confirming applied Group Policy Objects" loading="lazy"/>
+          <p class="img-caption">// gpresult /r — applied GPOs confirmed on client; password and restriction policies active</p>
+        </div>
+
+        <div class="callout">
+          <p><code>gpresult /r</code> run on the Windows 11 client post-join to enumerate applied GPOs. Password policy, restriction policies, and OU-scoped objects confirmed as active. Domain credential authentication verified with multiple user accounts.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 08 · CROSS-SYSTEM COMMUNICATION -->
+    <section class="lab-section" id="s08" aria-labelledby="h-s08">
+      <div class="section-head">
+        <span class="section-num">08</span>
+        <h2 id="h-s08">Cross-System Communication</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Baseline connectivity validation across all three machines establishes a known-good network state — essential both for troubleshooting and as a reference point for detection. If ICMP or DNS fails between systems, every higher-level service (authentication, policy application, SMB) will fail with it. Verifying the baseline first narrows diagnostic scope significantly.</p>
+
+        <div class="img-block">
+          <img src="assets/windows_server_2016/windows_ping_ubuntu_8.png" alt="Successful ICMP ping from Windows Server 2016 at 192.168.10.2 to Ubuntu at 192.168.10.1" loading="lazy"/>
+          <p class="img-caption">// ICMP: Windows Server (192.168.10.2) → Ubuntu (192.168.10.1) — baseline reachability confirmed</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/ubuntu_server/ubuntu_ping_windows_12.png" alt="Successful ICMP ping from Ubuntu Server at 192.168.10.1 to Windows Server at 192.168.10.2" loading="lazy"/>
+          <p class="img-caption">// ICMP: Ubuntu (192.168.10.1) → Windows Server (192.168.10.2) — bidirectional reachability verified</p>
+        </div>
+
+        <ul class="detail-list" aria-label="Communication details">
+          <li>Bidirectional ICMP confirmed between all three systems — Layer 3 routing verified clean</li>
+          <li>DNS resolution for lab.local confirmed from domain-joined client — DC serving responses correctly</li>
+          <li>Network isolation verified: no traffic escaping the lab-net segment</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 09 · UBUNTU SERVER ROLE -->
+    <section class="lab-section" id="s09" aria-labelledby="h-s09">
+      <div class="section-head">
+        <span class="section-num">09</span>
+        <h2 id="h-s09">Ubuntu Server Role</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Including a Linux host in a Windows AD environment reflects real-world mixed-OS infrastructure. The Ubuntu server is intentionally not domain-joined, representing a non-managed endpoint within the network perimeter — a category that presents distinct visibility challenges in a SOC context, since AD-based logging and policy enforcement do not apply to it.</p>
+
+        <div class="img-block">
+          <img src="assets/ubuntu_server/static_ip_ubuntu_11.png" alt="Netplan configuration file on Ubuntu Server assigning static IP 192.168.10.1 within the lab-net subnet" loading="lazy"/>
+          <p class="img-caption">// Netplan static IP configuration — 192.168.10.1, consistent with lab-net addressing scheme</p>
+        </div>
+        <div class="img-block">
+          <img src="assets/ubuntu_server/ssh_status_12.png" alt="systemctl status output showing SSH service active and running on Ubuntu Server" loading="lazy"/>
+          <p class="img-caption">// SSH service active — remote management enabled for cross-platform access testing</p>
+        </div>
+
+        <ul class="detail-list" aria-label="Ubuntu server details">
+          <li>Static IP (192.168.10.1) configured via Netplan — no DHCP dependency</li>
+          <li>SSH enabled for remote access — simulates a managed Linux endpoint in the network</li>
+          <li>Intentionally not joined to the domain — represents a non-AD-managed system with limited policy enforcement</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 10 · KEY LEARNINGS -->
+    <section class="lab-section" id="s10" aria-labelledby="h-s10">
+      <div class="section-head">
+        <span class="section-num">10</span>
+        <h2 id="h-s10">Key Learnings</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">Each issue encountered during the lab revealed a dependency that documentation understates. The following reflect real troubleshooting outcomes, not theoretical best practices.</p>
+
+        <ul class="detail-list" aria-label="Key learnings">
+          <li>Active Directory is tightly coupled with DNS — a misconfigured DNS pointer prevents domain join, Kerberos ticket issuance, and policy application simultaneously</li>
+          <li>Group Policy enforces security at scale but requires explicit verification — policies set on the DC are not guaranteed to apply until confirmed on the endpoint with <code>gpresult</code></li>
+          <li>Pre-promotion server configuration (hostname, static IP, DNS self-reference) determines whether DC promotion succeeds or fails; these steps cannot be safely skipped or done retroactively</li>
+          <li>Connectivity and name resolution are the first diagnostic layer — every authentication and policy failure traces back to one of these two primitives</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="section-divider" aria-hidden="true"/>
+
+    <!-- 11 · FUTURE IMPROVEMENTS -->
+    <section class="lab-section" id="s11" aria-labelledby="h-s11">
+      <div class="section-head">
+        <span class="section-num">11</span>
+        <h2 id="h-s11">Future Improvements</h2>
+      </div>
+      <div class="section-body">
+        <p class="section-text">The lab establishes a functional AD baseline. The next phase shifts from configuration to detection and adversarial simulation — moving the environment from an identity infrastructure build into an active blue team training platform.</p>
+
+        <ul class="detail-list" aria-label="Planned improvements">
+          <li>Integrate Wazuh as a SIEM — forward Windows Event Logs (4624, 4625, 4648, 4768) from the DC for authentication monitoring and anomaly detection</li>
+          <li>Simulate credential-based attacks: password spraying, AS-REP roasting, and lateral movement via Pass-the-Hash to validate detection coverage</li>
+          <li>Deploy Windows Event Forwarding (WEF) to centralize logs from all domain members into a single collection point</li>
+          <li>Add a file server with NTFS permission structures, share-level access controls, and audit policy to simulate data access monitoring scenarios</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer" role="contentinfo">
+  <p class="footer-copy">© 2026 Bashar Mohamed Omar · Kigali, Rwanda</p>
+  <a href="../index.html" class="footer-back" aria-label="Return to portfolio homepage">← Back to Portfolio</a>
+</footer>
+
+</body>
 </html>
