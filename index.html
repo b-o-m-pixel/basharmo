@@ -439,6 +439,192 @@
   .cert-lightbox-ph { width: 500px; max-width: 90vw; aspect-ratio: 4/3; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; }
   .cert-lightbox-close { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.12em; cursor: pointer; transition: color 0.2s; }
   .cert-lightbox-close:hover { color: var(--accent); }
+  .tier-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .tier-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .tier-block { margin-bottom: 2.5rem; }
+  
+  /* Tier 1 — anchor cards */
+  .anchor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .anchor-card {
+    border: 1px solid var(--border);
+    padding: 1.5rem 1.75rem;
+    position: relative;
+    transition: border-color 0.3s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .anchor-card:hover { border-color: var(--accent2); }
+  .anchor-card.flagship {
+    border-color: rgba(0,212,255,0.35);
+  }
+  .anchor-card.flagship::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .anchor-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .anchor-issuer {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .anchor-name {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--heading);
+    line-height: 1.3;
+  }
+  .anchor-topics {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 0.75rem;
+  }
+  .cert-status {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .cert-status.active  { background: rgba(0,255,136,0.1);  color: var(--green);  border: 1px solid rgba(0,255,136,0.3); }
+  .cert-status.progress { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  
+  /* Tier 2 — skill path rows */
+  .path-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .path-card {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: border-color 0.3s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .path-card:hover { border-color: var(--accent2); }
+  .path-icon {
+    width: 36px; height: 36px;
+    background: rgba(0,212,255,0.06);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .path-info { flex: 1; min-width: 0; }
+  .path-name {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--heading);
+    margin-bottom: 0.2rem;
+  }
+  .path-meta {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .path-thumb {
+    flex-shrink: 0;
+    width: 64px; height: 46px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    overflow: hidden;
+  }
+  .path-thumb:hover { border-color: var(--accent); }
+  .path-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .path-thumb-label {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+  }
+  
+  /* Tier 3 — compact badges */
+  .badge-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .badge-item {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+  .badge-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .badge-dot.done    { background: var(--green); }
+  .badge-dot.pending { background: var(--muted); }
+  
+  /* Lightbox */
+  .cert-lightbox {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    cursor: pointer;
+  }
+  .cert-lightbox.open { display: flex; }
+  .cert-lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border: 1px solid var(--border); }
+  .cert-lightbox-ph {
+    width: 500px; max-width: 90vw; aspect-ratio: 4/3;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.75rem;
+  }
+  .cert-lightbox-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--muted); letter-spacing: 0.12em;
+    cursor: pointer; transition: color 0.2s;
+  }
+  .cert-lightbox-close:hover { color: var(--accent); }
 
   /* ── CONTACT ── */
   #contact {
@@ -558,7 +744,7 @@
     </div>
     <div class="hero-stats">
       <div>
-        <span class="stat-num">2</span>
+        <span class="stat-num">7</span>
         <span class="stat-label">Industry Certs</span>
       </div>
       <div>
@@ -842,62 +1028,136 @@
   <div class="container">
     <div class="section-label">05 // Credentials</div>
     <h2>Certifications</h2>
-    <div class="certs-list">
 
-      <div class="cert-card">
-        <div class="cert-left">
-          <div class="cert-top-row">
+    <!-- ── TIER 1: ANCHOR CREDENTIALS ── -->
+    <div class="tier-block">
+      <div class="tier-label">Tier 1 — Anchor credentials</div>
+      <div class="anchor-grid">
+
+        <div class="anchor-card flagship">
+          <div class="anchor-top">
+            <div>
+              <div class="anchor-issuer">ISC2</div>
+              <div class="anchor-name">Certified in Cybersecurity (CC)</div>
+            </div>
             <div class="cert-status progress">IN PROGRESS</div>
-            <div class="cert-name">ISC2 Certified in Cybersecurity (CC)</div>
           </div>
-          <div class="cert-sub">
-            <strong>Issuer:</strong> ISC2 — globally recognized entry-level security certification<br/>
-            <strong>Topics:</strong> Security principles · Business continuity · Access controls · Network security · Security operations<br/>
-            <strong>Skills:</strong> Security governance · Risk management · Incident response fundamentals
+          <div class="anchor-topics">
+            Security principles · Business continuity · Access controls · Network security · Security operations
+          </div>
+          <div class="skill-tags">
+            <span class="tag">Risk Management</span>
+            <span class="tag">Incident Response</span>
+            <span class="tag">Governance</span>
           </div>
         </div>
-        <div class="cert-thumb" onclick="openCertLightbox(this)" data-label="ISC2 CC — In Progress" data-src="">
-          <div class="cert-thumb-placeholder">CERT<br/>IN<br/>PROGRESS</div>
-        </div>
-      </div>
 
-      <div class="cert-card">
-        <div class="cert-left">
-          <div class="cert-top-row">
-            <div class="cert-status active">COMPLETED</div>
-            <div class="cert-name">Web Attack Detection &amp; Analysis</div>
+        <div class="anchor-card">
+          <div class="anchor-top">
+            <div>
+              <div class="anchor-issuer">HackTheBox</div>
+              <div class="anchor-name">SOC Analyst Path</div>
+            </div>
+            <div class="cert-status progress">IN PROGRESS</div>
           </div>
-          <div class="cert-sub">
-            <strong>Issuer:</strong> LetsDefend — SOC analyst training platform<br/>
-            <strong>Topics:</strong> IDOR · Log4Shell · Spring4Shell · Text4Shell · JWT attacks · SAML-based exploits<br/>
-            <strong>Skills:</strong> Web attack pattern recognition · Live SOC environment analysis · Exploit detection
+          <div class="anchor-topics">
+            Threat detection · Log analysis · SIEM operations · Incident handling · Network forensics
+          </div>
+          <div class="skill-tags">
+            <span class="tag">SOC Workflow</span>
+            <span class="tag">Threat Hunting</span>
+            <span class="tag">DFIR</span>
           </div>
         </div>
-        <div class="cert-thumb" onclick="openCertLightbox(this)" data-label="LetsDefend — Web Attack Detection & Analysis" data-src="assets/certs/letsdefend-web-attacks.png">
-          <img src="ressources/certificates/f6a58246-58d2-4ecd-8c11-5d7a2e2a6b11.png" alt="LetsDefend Web Attack Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-          <div class="cert-thumb-placeholder" style="display:none">CLICK<br/>TO<br/>VIEW</div>
-        </div>
-      </div>
 
-      <div class="cert-card">
-        <div class="cert-left">
-          <div class="cert-top-row">
-            <div class="cert-status active">COMPLETED</div>
-            <div class="cert-name">Cybersecurity for Students</div>
-          </div>
-          <div class="cert-sub">
-            <strong>Issuer:</strong> LetsDefend — SOC analyst training platform<br/>
-            <strong>Topics:</strong> Networking · Linux · Windows · SIEM operations · Malware analysis · Introduction to Cryptology<br/>
-            <strong>Skills:</strong> Log analysis · System administration · Threat monitoring · Cryptographic concepts
-          </div>
-        </div>
-        <div class="cert-thumb" onclick="openCertLightbox(this)" data-label="LetsDefend — Cybersecurity for Students" data-src="assets/certs/letsdefend-cybersec-students.png">
-          <img src="ressources/certificates/022a6b3d-7394-40d9-a28d-bba1a91d0f61.png" alt="LetsDefend Cybersecurity for Students Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-          <div class="cert-thumb-placeholder" style="display:none">CLICK<br/>TO<br/>VIEW</div>
-        </div>
       </div>
-
     </div>
+
+    <!-- ── TIER 2: SKILL PATHS ── -->
+    <div class="tier-block">
+      <div class="tier-label">Tier 2 — Skill paths</div>
+      <div class="path-list">
+
+        <div class="path-card">
+          <div class="path-icon">🔍</div>
+          <div class="path-info">
+            <div class="path-name">SOC Analyst Learning Path</div>
+            <div class="path-meta">LetsDefend · Alert triage · SIEM · Incident handling · Log analysis</div>
+          </div>
+          <div class="cert-status active">COMPLETED</div>
+          <!-- IMPORTANT: replace the src below with your actual certificate image path
+               e.g. ressources/certificates/YOUR-FILENAME.png -->
+          <div class="path-thumb" onclick="openCertLightbox(this)" data-label="SOC Analyst Learning Path — LetsDefend" data-src="">
+            <div class="path-thumb-label">ADD<br/>CERT<br/>IMG</div>
+          </div>
+        </div>
+
+        <div class="path-card">
+          <div class="path-icon">🦠</div>
+          <div class="path-info">
+            <div class="path-name">Malware Analysis Skill Path</div>
+            <div class="path-meta">LetsDefend · Sandbox analysis · IOC extraction · Behavioural analysis</div>
+          </div>
+          <div class="cert-status active">COMPLETED</div>
+          <!-- IMPORTANT: replace the src below with your actual certificate image path -->
+          <div class="path-thumb" onclick="openCertLightbox(this)" data-label="Malware Analysis Skill Path — LetsDefend" data-src="">
+            <div class="path-thumb-label">ADD<br/>CERT<br/>IMG</div>
+          </div>
+        </div>
+
+        <div class="path-card">
+          <div class="path-icon">🧪</div>
+          <div class="path-info">
+            <div class="path-name">DFIR Learning Path</div>
+            <div class="path-meta">LetsDefend · Digital forensics · Incident response · Evidence handling</div>
+          </div>
+          <div class="cert-status progress">IN PROGRESS</div>
+          <div class="path-thumb" onclick="openCertLightbox(this)" data-label="DFIR Learning Path — LetsDefend (in progress)" data-src="">
+            <div class="path-thumb-label">SOON</div>
+          </div>
+        </div>
+
+        <div class="path-card">
+          <div class="path-icon">⚔️</div>
+          <div class="path-info">
+            <div class="path-name">Web Attack Detection &amp; Analysis</div>
+            <div class="path-meta">LetsDefend · IDOR · Log4Shell · Spring4Shell · JWT attacks · SAML exploits</div>
+          </div>
+          <div class="cert-status active">COMPLETED</div>
+          <div class="path-thumb" onclick="openCertLightbox(this)" data-label="Web Attack Detection & Analysis — LetsDefend" data-src="ressources/certificates/f6a58246-58d2-4ecd-8c11-5d7a2e2a6b11.png">
+            <img src="ressources/certificates/f6a58246-58d2-4ecd-8c11-5d7a2e2a6b11.png" alt="LetsDefend Web Attack Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+            <div class="path-thumb-label" style="display:none">CLICK<br/>TO<br/>VIEW</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── TIER 3: FOUNDATIONAL COMPLETIONS ── -->
+    <div class="tier-block">
+      <div class="tier-label">Tier 3 — Foundational completions</div>
+      <div class="badge-grid">
+
+        <div class="badge-item">
+          <div class="badge-dot done"></div>
+          Cybersecurity for Students — LetsDefend
+        </div>
+
+        <!-- Add NetAcad completions here as they come in, e.g:
+        <div class="badge-item">
+          <div class="badge-dot done"></div>
+          Introduction to Cybersecurity — Cisco NetAcad
+        </div>
+        -->
+
+        <div class="badge-item">
+          <div class="badge-dot pending"></div>
+          Cisco NetAcad completions — coming soon
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </section>
 
