@@ -21,9 +21,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--bg);
     color: var(--text);
@@ -104,7 +102,7 @@
     max-width: 1100px;
     margin: 0 auto;
   }
-  .hero-inner { max-width: 720px; }
+  .hero-inner { max-width: 720px; animation: fadeUp 0.8s ease both; }
 
   .hero-tag {
     font-family: var(--mono);
@@ -151,11 +149,8 @@
     line-height: 1.8;
   }
 
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
   .btn {
     font-family: var(--mono);
     font-size: 0.8rem;
@@ -167,17 +162,9 @@
     transition: all 0.2s;
     cursor: pointer;
   }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-    border-color: var(--accent);
-  }
+  .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   .btn-primary:hover { background: transparent; color: var(--accent); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--muted);
-    border-color: var(--border);
-  }
+  .btn-ghost { background: transparent; color: var(--muted); border-color: var(--border); }
   .btn-ghost:hover { color: var(--accent); border-color: var(--accent); }
 
   .hero-stats {
@@ -234,13 +221,89 @@
     margin-bottom: 3rem;
   }
 
+  /* ── PROFILE ── */
+  #profile {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .profile-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .profile-text p {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+  }
+  .profile-text p:last-child { margin-bottom: 0; }
+  .profile-text strong { color: var(--heading); }
+  .profile-sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+  .profile-stat-card {
+    border: 1px solid var(--border);
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: border-color 0.3s;
+  }
+  .profile-stat-card:hover { border-color: var(--accent2); }
+  .profile-stat-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    width: 2.5rem;
+    text-align: center;
+  }
+  .profile-stat-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .profile-stat-value {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--heading);
+    line-height: 1.3;
+  }
+
   /* ── SKILLS ── */
   #skills { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  /* Zone labels */
+  .zone-block { margin-bottom: 3rem; }
+  .zone-block:last-child { margin-bottom: 0; }
+  .zone-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .zone-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .zone-label span {
+    color: var(--accent);
+    margin-right: 0.25rem;
+  }
 
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
   .skill-card {
     border: 1px solid var(--border);
@@ -262,11 +325,12 @@
     transition: transform 0.3s;
   }
   .skill-card:hover::before { transform: scaleX(1); }
-
-  .skill-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
+  .skill-card.security-card::before {
+    background: linear-gradient(90deg, var(--green), var(--accent));
   }
+  .skill-card.security-card:hover { border-color: var(--green); }
+
+  .skill-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
   .skill-title {
     font-family: var(--sans);
     font-weight: 700;
@@ -290,6 +354,31 @@
     color: var(--accent);
     letter-spacing: 0.08em;
   }
+  .tag.green {
+    background: rgba(0,255,136,0.07);
+    border-color: rgba(0,255,136,0.2);
+    color: var(--green);
+  }
+
+  /* Zone 3 — tooling row */
+  .tooling-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    background: rgba(0,212,255,0.02);
+  }
+  .tool-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tool-tag:hover { color: var(--accent); border-color: rgba(0,212,255,0.3); }
 
   /* ── PROJECTS ── */
   .projects-grid {
@@ -305,7 +394,15 @@
     animation: fadeUp 0.6s ease both;
   }
   .project-card:hover { border-color: var(--accent2); }
-
+  .project-card.documented {
+    border-color: rgba(0,212,255,0.2);
+  }
+  .project-card.documented .accent-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
   .project-number {
     font-family: var(--mono);
     font-size: 0.65rem;
@@ -335,6 +432,74 @@
     border-left: 2px solid var(--green);
     margin-bottom: 1rem;
     line-height: 1.6;
+  }
+
+  /* Undocumented labs compact row */
+  .labs-pending {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .labs-pending-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .labs-pending-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .labs-pending-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem;
+  }
+  .lab-stub {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: border-color 0.2s;
+  }
+  .lab-stub:hover { border-color: var(--accent2); }
+  .lab-stub-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    flex-shrink: 0;
+  }
+  .lab-stub-info { flex: 1; min-width: 0; }
+  .lab-stub-title {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .lab-stub-meta {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .lab-stub-status {
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
   }
 
   /* ── EXPERIENCE ── */
@@ -368,10 +533,7 @@
     color: var(--heading);
     margin-bottom: 0.5rem;
   }
-  .exp-bullets {
-    list-style: none;
-    margin-top: 0.75rem;
-  }
+  .exp-bullets { list-style: none; margin-top: 0.75rem; }
   .exp-bullets li {
     font-size: 0.9rem;
     color: var(--text);
@@ -390,58 +552,9 @@
   }
 
   /* ── CERTS ── */
-  .certs-list { display: flex; flex-direction: column; gap: 1.25rem; }
-  .cert-card {
-    border: 1px solid var(--border);
-    padding: 1.5rem 1.75rem;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    transition: border-color 0.3s;
-    animation: fadeUp 0.6s ease both;
-  }
-  .cert-card:hover { border-color: var(--accent2); }
-  .cert-left { flex: 1; min-width: 0; }
-  .cert-top-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
-  .cert-status {
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    padding: 0.2rem 0.5rem;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .cert-status.active { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
-  .cert-status.progress { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
-  .cert-name { font-family: var(--sans); font-weight: 700; font-size: 1rem; color: var(--heading); }
-  .cert-sub { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); line-height: 1.7; margin-top: 0.4rem; }
-  .cert-sub strong { color: var(--text); }
-  .cert-thumb {
-    flex-shrink: 0;
-    width: 90px;
-    height: 64px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: border-color 0.3s;
-    overflow: hidden;
-    position: relative;
-  }
-  .cert-thumb:hover { border-color: var(--accent); }
-  .cert-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .cert-thumb-placeholder { font-family: var(--mono); font-size: 0.5rem; color: var(--muted); text-align: center; padding: 0.5rem; letter-spacing: 0.06em; line-height: 1.6; }
-  .cert-lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; padding: 2rem; cursor: pointer; }
-  .cert-lightbox.open { display: flex; }
-  .cert-lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border: 1px solid var(--border); }
-  .cert-lightbox-ph { width: 500px; max-width: 90vw; aspect-ratio: 4/3; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; }
-  .cert-lightbox-close { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.12em; cursor: pointer; transition: color 0.2s; }
-  .cert-lightbox-close:hover { color: var(--accent); }
   .tier-label {
     font-family: var(--mono);
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--muted);
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -450,37 +563,38 @@
     align-items: center;
     gap: 0.75rem;
   }
-  .tier-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .tier-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
   .tier-block { margin-bottom: 2.5rem; }
-  
-  /* Tier 1 — anchor cards */
+
+  /* Anchor cards — Tier 1 */
   .anchor-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.25rem;
   }
   .anchor-card {
+    background: rgba(13,17,23,0.6);
     border: 1px solid var(--border);
     padding: 1.5rem 1.75rem;
     position: relative;
-    transition: border-color 0.3s;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
     animation: fadeUp 0.6s ease both;
   }
-  .anchor-card:hover { border-color: var(--accent2); }
+  .anchor-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
   .anchor-card.flagship {
-    border-color: rgba(0,212,255,0.35);
+    border-color: rgba(0,212,255,0.4);
+    background: rgba(0,212,255,0.03);
   }
   .anchor-card.flagship::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 2px;
+    height: 3px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .anchor-card.industry {
+    border-color: rgba(0,212,255,0.2);
   }
   .anchor-top {
     display: flex;
@@ -491,9 +605,9 @@
   }
   .anchor-issuer {
     font-family: var(--mono);
-    font-size: 0.6rem;
+    font-size: 0.58rem;
     color: var(--muted);
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     margin-bottom: 0.3rem;
   }
@@ -506,59 +620,68 @@
   }
   .anchor-topics {
     font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     color: var(--muted);
-    line-height: 1.8;
-    margin-bottom: 0.75rem;
+    line-height: 1.85;
+    margin-bottom: 0.85rem;
   }
-  .cert-status {
+
+  /* Status pills */
+  .cert-pill {
     font-family: var(--mono);
-    font-size: 0.55rem;
-    padding: 0.2rem 0.5rem;
+    font-size: 0.52rem;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
     letter-spacing: 0.1em;
     white-space: nowrap;
     flex-shrink: 0;
+    text-transform: uppercase;
   }
-  .cert-status.active  { background: rgba(0,255,136,0.1);  color: var(--green);  border: 1px solid rgba(0,255,136,0.3); }
-  .cert-status.progress { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
-  
-  /* Tier 2 — skill path rows */
-  .path-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .cert-pill.active  { background: rgba(0,255,136,0.12); color: var(--green);  border: 1px solid rgba(0,255,136,0.3); }
+  .cert-pill.progress { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.25); }
+
+  /* Tier 2 — path cards */
+  .path-list { display: flex; flex-direction: column; gap: 0.65rem; }
   .path-card {
+    background: rgba(13,17,23,0.6);
     border: 1px solid var(--border);
-    padding: 1rem 1.25rem;
-    display: flex;
+    padding: 0.9rem 1.25rem;
+    display: grid;
+    grid-template-columns: 40px 1fr auto auto;
     align-items: center;
-    gap: 1.25rem;
-    transition: border-color 0.3s;
+    gap: 1rem;
+    transition: border-color 0.3s, background 0.3s;
     animation: fadeUp 0.6s ease both;
   }
-  .path-card:hover { border-color: var(--accent2); }
+  .path-card:hover {
+    border-color: var(--accent2);
+    background: rgba(0,212,255,0.02);
+  }
   .path-icon {
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     background: rgba(0,212,255,0.06);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0,212,255,0.12);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
   }
   .path-info { flex: 1; min-width: 0; }
   .path-name {
     font-family: var(--sans);
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--heading);
     margin-bottom: 0.2rem;
   }
   .path-meta {
     font-family: var(--mono);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     color: var(--muted);
     line-height: 1.7;
   }
   .path-thumb {
     flex-shrink: 0;
-    width: 64px; height: 46px;
+    width: 60px; height: 44px;
     border: 1px solid var(--border);
     background: var(--surface);
     display: flex; align-items: center; justify-content: center;
@@ -570,53 +693,47 @@
   .path-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .path-thumb-label {
     font-family: var(--mono);
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     color: var(--muted);
     text-align: center;
     letter-spacing: 0.08em;
     line-height: 1.6;
   }
-  
-  /* Tier 3 — compact badges */
+
+  /* Tier 3 — badge pills */
   .badge-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .badge-item {
     font-family: var(--mono);
     font-size: 0.62rem;
     color: var(--muted);
-    padding: 0.3rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border: 1px solid var(--border);
+    background: rgba(13,17,23,0.6);
     display: flex;
     align-items: center;
     gap: 0.5rem;
     letter-spacing: 0.06em;
+    transition: border-color 0.2s, color 0.2s;
   }
-  .badge-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .badge-item:hover { border-color: var(--accent2); color: var(--text); }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
   .badge-dot.done    { background: var(--green); }
   .badge-dot.pending { background: var(--muted); }
-  
-  /* Lightbox */
+
+  /* ── CERT LIGHTBOX ── */
   .cert-lightbox {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.92);
-    z-index: 1000;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92); z-index: 1000;
     align-items: center; justify-content: center;
-    padding: 2rem;
-    cursor: pointer;
+    padding: 2rem; cursor: pointer;
   }
   .cert-lightbox.open { display: flex; }
   .cert-lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border: 1px solid var(--border); }
   .cert-lightbox-ph {
     width: 500px; max-width: 90vw; aspect-ratio: 4/3;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--surface); border: 1px solid var(--border);
     display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 0.75rem;
+    align-items: center; justify-content: center; gap: 0.75rem;
   }
   .cert-lightbox-close {
     position: absolute; top: 1.5rem; right: 1.5rem;
@@ -627,10 +744,7 @@
   .cert-lightbox-close:hover { color: var(--accent); }
 
   /* ── CONTACT ── */
-  #contact {
-    text-align: center;
-    border-top: 1px solid var(--border);
-  }
+  #contact { text-align: center; border-top: 1px solid var(--border); }
   .contact-links {
     display: flex;
     justify-content: center;
@@ -653,7 +767,7 @@
   }
   .contact-link:hover { color: var(--accent); border-color: var(--accent); }
 
-  /* ── TERMINAL BLOCK ── */
+  /* ── TERMINAL ── */
   .terminal {
     background: #0a0f14;
     border: 1px solid var(--border);
@@ -668,10 +782,7 @@
     margin-right: auto;
     line-height: 2;
   }
-  .cursor {
-    animation: blink 1s step-end infinite;
-    color: var(--accent);
-  }
+  .cursor { animation: blink 1s step-end infinite; color: var(--accent); }
   .terminal .prompt { color: var(--green); }
   .terminal .cmd { color: var(--accent); }
   .terminal .out { color: var(--muted); }
@@ -685,7 +796,6 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
-  .hero-inner { animation: fadeUp 0.8s ease both; }
 
   /* ── FOOTER ── */
   footer {
@@ -707,6 +817,7 @@
     #hero { padding: 5rem 1.5rem 3rem; }
     .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
     .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .profile-inner { grid-template-columns: 1fr; gap: 2rem; }
   }
 </style>
 </head>
@@ -716,6 +827,7 @@
 <nav>
   <div class="nav-logo">// bashar.mohamed.omar</div>
   <ul class="nav-links">
+    <li><a href="#profile">Profile</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -729,14 +841,12 @@
   <div class="hero-inner">
     <div class="hero-tag">System Administration · Infrastructure · Security</div>
     <h1>Bashar<br/><span>Mohamed</span><br/>Omar</h1>
-    <div class="hero-role">Aspiring System Administrator & Cybersecurity Analyst - University of Kigali, Final Year</div>
+    <div class="hero-role">System Administrator · Blue Team Analyst · Final Year CS</div>
     <p class="hero-bio">
-      I design, deploy, and manage systems, not just analyze them. 
-      Final-year Computer Science student with hands-on experience 
-      building Linux and Windows environments, configuring Active 
-      Directory, automating system tasks, and managing networked 
-      infrastructures. Strong foundation in system administration 
-      with integrated security practices. Based in Kigali, Rwanda.
+      I build infrastructure and secure it. Linux and Windows environments,
+      Active Directory, network configuration, scripted automation — and the
+      detection, monitoring, and incident response layer on top of all of it.
+      Based in Kigali, Rwanda.
     </p>
     <div class="hero-cta">
       <a href="#projects" class="btn btn-primary">View Projects</a>
@@ -744,16 +854,83 @@
     </div>
     <div class="hero-stats">
       <div>
-        <span class="stat-num">7</span>
-        <span class="stat-label">Industry Certs</span>
+        <span class="stat-num">6</span>
+        <span class="stat-label">Documented Labs</span>
       </div>
       <div>
-        <span class="stat-num">3</span>
-        <span class="stat-label">Lab Domains</span>
+        <span class="stat-num">5+</span>
+        <span class="stat-label">Certs & Paths</span>
       </div>
       <div>
-        <span class="stat-num">ISC2</span>
-        <span class="stat-label">CC In Progress</span>
+        <span class="stat-num">1</span>
+        <span class="stat-label">Industry Internship</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile">
+  <div class="container">
+    <div class="section-label">01 // Profile</div>
+    <h2>Who I Am</h2>
+    <div class="profile-inner">
+      <div class="profile-text">
+        <p>
+          I'm a final-year Computer Science student at the University of Kigali
+          with a specific focus: <strong>building systems that are both functional
+          and defensible.</strong> Most people end up on one side of that line —
+          sysadmin or security. I've deliberately built across both.
+        </p>
+        <p>
+          On the infrastructure side, I configure and manage Linux and Windows
+          environments, deploy Active Directory with Group Policy and DNS, build
+          multi-topology networks, and automate operational tasks with Bash,
+          Python, and PowerShell. These aren't concepts I've read about — they're
+          documented in the labs below.
+        </p>
+        <p>
+          On the security side, I run a Wazuh SIEM stack, write custom detection
+          rules, triage alerts, analyse malware in isolated sandboxes, and work
+          through SOC scenarios on LetsDefend and HackTheBox. The goal isn't just
+          to detect threats — it's to understand the infrastructure well enough to
+          know what normal looks like before something breaks it.
+        </p>
+        <p>
+          Long-term, I'm drawn toward <strong>OT/ICS security</strong> — securing
+          the infrastructure that actually runs physical systems. That's where the
+          sysadmin-defender crossover matters most.
+        </p>
+      </div>
+      <div class="profile-sidebar">
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🎓</div>
+          <div>
+            <div class="profile-stat-label">Education</div>
+            <div class="profile-stat-value">BSc Computer Science<br/>University of Kigali — Final Year</div>
+          </div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">📍</div>
+          <div>
+            <div class="profile-stat-label">Location</div>
+            <div class="profile-stat-value">Kigali, Rwanda</div>
+          </div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🎯</div>
+          <div>
+            <div class="profile-stat-label">Target Role</div>
+            <div class="profile-stat-value">Junior Sysadmin · Junior SOC Analyst<br/>Entry-level IT Infrastructure</div>
+          </div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🏭</div>
+          <div>
+            <div class="profile-stat-label">Long-term Interest</div>
+            <div class="profile-stat-value">OT / ICS Security</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -763,135 +940,169 @@
 <section id="skills">
   <div class="container">
     <div class="section-label">02 // Technical Arsenal</div>
-    <h2>What I Work With</h2>
-    <div class="skills-grid">
+    <h2>How I'm Built</h2>
 
-      <div class="skill-card" style="animation-delay:0.25s">
-        <div class="skill-icon">🐧</div>
-        <div class="skill-title">Operating Systems</div>
-        <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
-          Comfortable administering Linux and Windows systems, including user management, service configuration, system monitoring, and basic hardening. Experience working with both server and desktop environments.
-        </p>
-        <div class="skill-tags">
-          <span class="tag">Linux</span><span class="tag">Windows</span><span class="tag">Event Logs</span>
+    <!-- ZONE 1: INFRASTRUCTURE FOUNDATION -->
+    <div class="zone-block">
+      <div class="zone-label"><span>Zone 01</span> Infrastructure Foundation</div>
+      <div class="skills-grid">
+
+        <div class="skill-card" style="animation-delay:0.05s">
+          <div class="skill-icon">🐧</div>
+          <div class="skill-title">OS Administration</div>
+          <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
+            Deploy and manage Linux and Windows Server environments. User and group
+            management, service configuration, system monitoring, log inspection,
+            and hardening across both server and desktop contexts. Hands-on with
+            Active Directory Domain Services, DNS, and Group Policy enforcement.
+          </p>
+          <div class="skill-tags">
+            <span class="tag">Linux</span>
+            <span class="tag">Windows Server</span>
+            <span class="tag">Active Directory</span>
+            <span class="tag">GPO</span>
+            <span class="tag">DNS</span>
+            <span class="tag">Event Logs</span>
+          </div>
         </div>
-      </div>
 
-      <div class="skill-card" style="animation-delay:0.15s">
-        <div class="skill-icon">🌐</div>
-        <div class="skill-title">Networking</div>
-        <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
-          Hands-on router/switch configuration, subnetting (FLSM/VLSM), and protocol implementation. Network simulation via Packet Tracer and GNS3.
-        </p>
-        <div class="skill-tags">
-          <span class="tag">TCP/IP</span><span class="tag">DHCP</span><span class="tag">NAT</span><span class="tag">SSH</span><span class="tag">GNS3</span>
+        <div class="skill-card" style="animation-delay:0.1s">
+          <div class="skill-icon">🌐</div>
+          <div class="skill-title">Networking</div>
+          <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
+            Configure and troubleshoot multi-topology networks: router and switch
+            setup, FLSM/VLSM subnetting, DHCP, NAT, SSH, and Telnet. Diagnosed
+            and resolved Layer 2/3 faults across live and simulated environments
+            during internship at Natcom Rwanda.
+          </p>
+          <div class="skill-tags">
+            <span class="tag">TCP/IP</span>
+            <span class="tag">DHCP</span>
+            <span class="tag">NAT</span>
+            <span class="tag">SSH</span>
+            <span class="tag">VLSM</span>
+            <span class="tag">GNS3</span>
+            <span class="tag">Packet Tracer</span>
+          </div>
         </div>
-      </div>
 
-      <div class="skill-card" style="animation-delay:0.3s">
-        <div class="skill-icon">🐍</div>
-        <div class="skill-title">Programming</div>
-        <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
-          Python and Bash for system automation, task scheduling, and operational tooling. Built scripts for backups, monitoring, and system management workflows.
-        </p>
-        <div class="skill-tags">
-          <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Scripting</span><span class="tag">Algorithms</span>
+        <div class="skill-card" style="animation-delay:0.15s">
+          <div class="skill-icon">🐍</div>
+          <div class="skill-title">Automation & Scripting</div>
+          <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
+            Write Bash, Python, and PowerShell scripts for operational tasks:
+            backup automation, system monitoring, scheduled jobs, and security
+            hardening utilities. Scripts are documented and available in the
+            Scripting Hub project below.
+          </p>
+          <div class="skill-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Bash</span>
+            <span class="tag">PowerShell</span>
+            <span class="tag">cron</span>
+            <span class="tag">Automation</span>
+          </div>
         </div>
-      </div>
 
-      <div class="skill-card">
-        <div class="skill-icon">🔍</div>
-        <div class="skill-title">Threat Detection & SIEM</div>
-        <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
-          Deployed and configured Wazuh to ingest events, write detection rules, and triage alerts. Practiced log correlation and alert investigation workflows.
-        </p>
-        <div class="skill-tags">
-          <span class="tag">Wazuh</span><span class="tag">Log Analysis</span><span class="tag">Alert Triage</span><span class="tag">SIEM</span>
-        </div>
       </div>
-
-      <div class="skill-card" style="animation-delay:0.1s">
-        <div class="skill-icon">🦠</div>
-        <div class="skill-title">Malware Analysis</div>
-        <p style="font-size:0.85rem;color:var(--text);line-height:1.7">Set up isolated VirtualBox/VMware sandboxes to safely execute and analyse malware samples. Documents behavioural IOCs and network artifacts.</p>
-        <div class="skill-tags">
-          <span class="tag">VirtualBox</span><span class="tag">IOC Analysis</span><span class="tag">Sandboxing</span>
-        </div>
-      </div>
-
-      <div class="skill-card" style="animation-delay:0.2s">
-        <div class="skill-icon">⚔️</div>
-        <div class="skill-title">Web Attack Detection</div>
-        <p style="font-size:0.85rem;color:var(--text);line-height:1.7">Trained on identifying and analysing IDOR, Log4Shell, Spring4Shell, JWT, and SAML-based attacks in live LetsDefend SOC environments.</p>
-        <div class="skill-tags">
-          <span class="tag">IDOR</span><span class="tag">Log4Shell</span><span class="tag">JWT</span><span class="tag">SAML</span>
-        </div>
-      </div>
-
     </div>
+
+    <!-- ZONE 2: SECURITY OPERATIONS -->
+    <div class="zone-block">
+      <div class="zone-label"><span>Zone 02</span> Security Operations</div>
+      <div class="skills-grid">
+
+        <div class="skill-card security-card" style="animation-delay:0.05s">
+          <div class="skill-icon">🔍</div>
+          <div class="skill-title">SIEM & Threat Detection</div>
+          <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
+            Deploy and operate Wazuh as a full XDR/SIEM stack. Write custom
+            detection rules, ingest agent events, correlate logs, and triage
+            alerts. Built a full attack-to-detection pipeline for SSH brute
+            force (MITRE T1110) with documented evidence chain.
+          </p>
+          <div class="skill-tags">
+            <span class="tag green">Wazuh</span>
+            <span class="tag green">SIEM</span>
+            <span class="tag green">Detection Rules</span>
+            <span class="tag green">Log Correlation</span>
+            <span class="tag green">Alert Triage</span>
+          </div>
+        </div>
+
+        <div class="skill-card security-card" style="animation-delay:0.1s">
+          <div class="skill-icon">🦠</div>
+          <div class="skill-title">Malware Analysis</div>
+          <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
+            Build isolated VirtualBox/VMware sandboxes to safely detonate and
+            observe malware behaviour. Document process trees, network artifacts,
+            registry changes, and indicators of compromise. Trained extensively
+            on LetsDefend's Malware Analysis Skill Path.
+          </p>
+          <div class="skill-tags">
+            <span class="tag green">Sandboxing</span>
+            <span class="tag green">IOC Extraction</span>
+            <span class="tag green">Behavioural Analysis</span>
+            <span class="tag green">VirtualBox</span>
+          </div>
+        </div>
+
+        <div class="skill-card security-card" style="animation-delay:0.15s">
+          <div class="skill-icon">⚔️</div>
+          <div class="skill-title">Web Attack Detection</div>
+          <p style="font-size:0.85rem;color:var(--text);line-height:1.7">
+            Identify and analyse web-based attack patterns in live SOC environments.
+            Trained on IDOR, Log4Shell, Spring4Shell, Text4Shell, JWT, and
+            SAML-based exploits. Certified in Web Attack Detection &amp;
+            Analysis via LetsDefend.
+          </p>
+          <div class="skill-tags">
+            <span class="tag green">IDOR</span>
+            <span class="tag green">Log4Shell</span>
+            <span class="tag green">JWT Attacks</span>
+            <span class="tag green">SAML Exploits</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ZONE 3: TOOLING -->
+    <div class="zone-block">
+      <div class="zone-label"><span>Zone 03</span> Tooling</div>
+      <div class="tooling-row">
+        <span class="tool-tag">Wazuh</span>
+        <span class="tool-tag">VirtualBox</span>
+        <span class="tool-tag">VMware</span>
+        <span class="tool-tag">Kali Linux</span>
+        <span class="tool-tag">Hydra</span>
+        <span class="tool-tag">Wireshark</span>
+        <span class="tool-tag">GNS3</span>
+        <span class="tool-tag">Cisco Packet Tracer</span>
+        <span class="tool-tag">Windows Server 2016</span>
+        <span class="tool-tag">Ubuntu Server</span>
+        <span class="tool-tag">Active Directory</span>
+        <span class="tool-tag">Git</span>
+        <span class="tool-tag">VS Code</span>
+        <span class="tool-tag">LetsDefend SOC Env</span>
+        <span class="tool-tag">HackTheBox</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <!-- PROJECTS -->
 <section id="projects">
   <div class="container">
-    <div class="section-label">03 // Lab Work</div>
+    <div class="section-label">03 // Documented Labs</div>
     <h2>Practical Projects</h2>
+
+    <!-- Documented projects — full cards -->
     <div class="projects-grid">
 
-      <div class="project-card">
-        <div class="project-number">PROJECT // 001</div>
-        <div class="project-title">Wazuh SIEM Home Lab</div>
-        <p class="project-desc">Deployed Wazuh as a full SIEM stack to simulate SOC analyst workflows. Configured agents, wrote custom detection rules, and practiced alert triage on simulated security events.</p>
-        <div class="project-detail">
-          ▸ Tool: Wazuh (open-source XDR/SIEM)<br/>
-          ▸ Focus: Alert ingestion, rule writing, log correlation<br/>
-          ▸ Outcome: Hands-on SOC analyst workflow practice
-        </div>
-        <div class="skill-tags">
-          <span class="tag">Wazuh</span>
-          <span class="tag">SIEM</span>
-          <span class="tag">Detection Rules</span>
-          <span class="tag">Log Analysis</span>
-        </div>
-      </div>
-
-      <div class="project-card" style="animation-delay:0.1s">
-        <div class="project-number">PROJECT // 002</div>
-        <div class="project-title">Malware Sandboxing Lab</div>
-        <p class="project-desc">Built an isolated VM environment using VirtualBox to safely detonate and observe malware behaviour. Documented network artifacts, process trees, and indicators of compromise (IOCs).</p>
-        <div class="project-detail">
-          ▸ Tool: VirtualBox isolated VM<br/>
-          ▸ Focus: Behavioural analysis, IOC documentation<br/>
-          ▸ Outcome: Safe malware execution and observation
-        </div>
-        <div class="skill-tags">
-          <span class="tag">VirtualBox</span>
-          <span class="tag">Malware Analysis</span>
-          <span class="tag">IOCs</span>
-          <span class="tag">Sandboxing</span>
-        </div>
-      </div>
-
-      <div class="project-card" style="animation-delay:0.2s">
-        <div class="project-number">PROJECT // 003</div>
-        <div class="project-title">Network Simulation Lab</div>
-        <p class="project-desc">Designed and tested multi-topology networks in Packet Tracer and GNS3 to reinforce subnetting, protocol configuration, and structured fault isolation beyond classroom exercises.</p>
-        <div class="project-detail">
-          ▸ Tools: Cisco Packet Tracer, GNS3<br/>
-          ▸ Focus: FLSM/VLSM subnetting, protocol configs<br/>
-          ▸ Outcome: Fault diagnosis across topologies
-        </div>
-        <div class="skill-tags">
-          <span class="tag">GNS3</span>
-          <span class="tag">Packet Tracer</span>
-          <span class="tag">Subnetting</span>
-          <span class="tag">Troubleshooting</span>
-        </div>
-      </div>
-
-      <div class="project-card" style="animation-delay:0.3s; border-color: rgba(0,212,255,0.2); position:relative; overflow:hidden;">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
+      <div class="project-card documented">
+        <div class="accent-bar"></div>
         <div class="project-number">PROJECT // 004</div>
         <div class="project-title">SSH Brute Force Detection Lab</div>
         <p class="project-desc">Full attack-to-detection pipeline: simulated SSH brute force with Hydra on Kali, captured host-level evidence in auth.log, and monitored the attack through a custom Wazuh SIEM dashboard with 5 screenshots documenting the complete SOC workflow.</p>
@@ -908,55 +1119,20 @@
           <span class="tag">Alert Triage</span>
         </div>
         <div style="margin-top:1.25rem">
-          <a href="project/ssh-brute-force/" style="font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.12em;border:1px solid var(--accent);padding:0.4rem 1rem;transition:all 0.2s;display:inline-block" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'" onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
+          <a href="project/ssh-brute-force/"
+             style="font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.12em;border:1px solid var(--accent);padding:0.4rem 1rem;transition:all 0.2s;display:inline-block"
+             onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'"
+             onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
             VIEW FULL WRITE-UP →
           </a>
         </div>
       </div>
 
-      <div class="project-card" style="animation-delay:0.4s; border-color: rgba(0,212,255,0.2); position:relative; overflow:hidden;">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
-        <div class="project-number">PROJECT // 005</div>
-        <div class="project-title">Scripting & Automation Hub</div>
-        <p class="project-desc">
-          Centralized hub of system administration and cybersecurity automation scripts developed through hands-on Linux practice. Includes multiple tools for backup automation, system monitoring, security hardening, and operational utilities.
-        </p>
-        <div class="project-detail">
-          ▸ Scope: Multi-script automation portfolio<br/>
-          ▸ Categories: System Automation · Security · Monitoring · Utilities<br/>
-          ▸ Stack: Bash · Python · Powershell · Linux tools · cron<br/>
-          ▸ Purpose: Infrastructure automation & system operations
-        </div>
-        <div class="skill-tags">
-          <span class="tag">Linux</span>
-          <span class="tag">Bash</span>
-          <span class="tag">Python</span>
-          <span class="tag">Powershell</span>
-          <span class="tag">Automation</span>
-          <span class="tag">SysAdmin</span>
-          <span class="tag">Cybersecurity</span>
-        </div>
-        <div style="margin-top:1.25rem">
-          <a href="project/scripting/scripting.html" 
-             style="font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.12em;border:1px solid var(--accent);padding:0.4rem 1rem;transition:all 0.2s;display:inline-block"
-              onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'"
-             onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
-           VIEW SCRIPTS →
-          </a>
-        </div>
-      </div>
-
-      <div class="project-card" style="animation-delay:0.4s; border-color: rgba(0,212,255,0.2); position:relative; overflow:hidden;">
-        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
+      <div class="project-card documented">
+        <div class="accent-bar"></div>
         <div class="project-number">PROJECT // 006</div>
         <div class="project-title">Active Directory Enterprise Lab</div>
-        <p class="project-desc">
-          Designed and deployed a multi-OS enterprise lab environment 
-          using Windows Server and Ubuntu. Configured Active Directory 
-          Domain Services, DNS, and centralized identity management 
-          (OUs, users, groups). Applied Group Policy for system configuration 
-          and security, and validated authentication across domain-joined machines.
-        </p>
+        <p class="project-desc">Designed and deployed a multi-OS enterprise lab environment using Windows Server and Ubuntu. Configured Active Directory Domain Services, DNS, and centralized identity management (OUs, users, groups). Applied Group Policy for system configuration and security, and validated authentication across domain-joined machines.</p>
         <div class="project-detail">
           ▸ Tools: Windows Server 2016 · Ubuntu Server · VirtualBox<br/>
           ▸ Focus: Active Directory · DNS · Group Policy · Identity Management<br/>
@@ -971,14 +1147,79 @@
           <span class="tag">SysAdmin</span>
         </div>
         <div style="margin-top:1.25rem">
-          <a href="project/ad-enterprise-lab/" style="font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.12em;border:1px solid var(--accent);padding:0.4rem 1rem;transition:all 0.2s;display:inline-block" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'" onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
+          <a href="project/ad-enterprise-lab/"
+             style="font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.12em;border:1px solid var(--accent);padding:0.4rem 1rem;transition:all 0.2s;display:inline-block"
+             onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'"
+             onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
             VIEW FULL WRITE-UP →
           </a>
         </div>
       </div>
 
+      <div class="project-card documented">
+        <div class="accent-bar"></div>
+        <div class="project-number">PROJECT // 005</div>
+        <div class="project-title">Scripting & Automation Hub</div>
+        <p class="project-desc">Centralized hub of system administration and cybersecurity automation scripts. Includes tools for backup automation, system monitoring, security hardening, and operational utilities — all developed through hands-on Linux and Windows practice.</p>
+        <div class="project-detail">
+          ▸ Categories: System Automation · Security · Monitoring · Utilities<br/>
+          ▸ Stack: Bash · Python · PowerShell · Linux tools · cron<br/>
+          ▸ Purpose: Infrastructure automation & system operations
+        </div>
+        <div class="skill-tags">
+          <span class="tag">Bash</span>
+          <span class="tag">Python</span>
+          <span class="tag">PowerShell</span>
+          <span class="tag">Automation</span>
+          <span class="tag">SysAdmin</span>
+        </div>
+        <div style="margin-top:1.25rem">
+          <a href="project/scripting/scripting.html"
+             style="font-family:var(--mono);font-size:0.7rem;color:var(--accent);text-decoration:none;letter-spacing:0.12em;border:1px solid var(--accent);padding:0.4rem 1rem;transition:all 0.2s;display:inline-block"
+             onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'"
+             onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
+            VIEW SCRIPTS →
+          </a>
+        </div>
+      </div>
 
     </div>
+
+    <!-- Undocumented labs — compact stubs -->
+    <div class="labs-pending">
+      <div class="labs-pending-label">In progress — write-ups pending</div>
+      <div class="labs-pending-grid">
+
+        <div class="lab-stub">
+          <div class="lab-stub-num">001</div>
+          <div class="lab-stub-info">
+            <div class="lab-stub-title">Wazuh SIEM Home Lab</div>
+            <div class="lab-stub-meta">Wazuh · Alert ingestion · Rule writing · Log correlation</div>
+          </div>
+          <div class="lab-stub-status">WRITE-UP PENDING</div>
+        </div>
+
+        <div class="lab-stub">
+          <div class="lab-stub-num">002</div>
+          <div class="lab-stub-info">
+            <div class="lab-stub-title">Malware Sandboxing Lab</div>
+            <div class="lab-stub-meta">VirtualBox · Behavioural analysis · IOC documentation</div>
+          </div>
+          <div class="lab-stub-status">WRITE-UP PENDING</div>
+        </div>
+
+        <div class="lab-stub">
+          <div class="lab-stub-num">003</div>
+          <div class="lab-stub-info">
+            <div class="lab-stub-title">Network Simulation Lab</div>
+            <div class="lab-stub-meta">GNS3 · Packet Tracer · FLSM/VLSM · Fault diagnosis</div>
+          </div>
+          <div class="lab-stub-status">WRITE-UP PENDING</div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -997,8 +1238,10 @@
       <div>
         <div class="exp-role">Networking Intern</div>
         <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">
-          Hands-on infrastructure internship focused on network configuration, 
-          system connectivity, and troubleshooting across multi-device environments.
+          Hands-on infrastructure internship at a national telecoms provider.
+          Configured multi-device network environments from physical cabling
+          through Layer 3 routing, with full responsibility for connectivity
+          validation before handoff.
         </p>
         <ul class="exp-bullets">
           <li>Configured and validated 3 routers and 2 switches across simulated multi-topology lab environments, ensuring full Layer 2/3 connectivity before handoff</li>
@@ -1029,7 +1272,7 @@
     <div class="section-label">05 // Credentials</div>
     <h2>Certifications</h2>
 
-    <!-- ── TIER 1: ANCHOR CREDENTIALS ── -->
+    <!-- TIER 1 — ANCHOR CREDENTIALS -->
     <div class="tier-block">
       <div class="tier-label">Tier 1 — Anchor credentials</div>
       <div class="anchor-grid">
@@ -1040,7 +1283,7 @@
               <div class="anchor-issuer">ISC2</div>
               <div class="anchor-name">Certified in Cybersecurity (CC)</div>
             </div>
-            <div class="cert-status progress">IN PROGRESS</div>
+            <div class="cert-pill progress">In Progress</div>
           </div>
           <div class="anchor-topics">
             Security principles · Business continuity · Access controls · Network security · Security operations
@@ -1058,7 +1301,7 @@
               <div class="anchor-issuer">HackTheBox</div>
               <div class="anchor-name">SOC Analyst Path</div>
             </div>
-            <div class="cert-status progress">IN PROGRESS</div>
+            <div class="cert-pill progress">In Progress</div>
           </div>
           <div class="anchor-topics">
             Threat detection · Log analysis · SIEM operations · Incident handling · Network forensics
@@ -1073,7 +1316,34 @@
       </div>
     </div>
 
-    <!-- ── TIER 2: SKILL PATHS ── -->
+    <!-- TIER 1.5 — INDUSTRY RECOGNITION -->
+    <div class="tier-block">
+      <div class="tier-label">Tier 1.5 — Industry recognition</div>
+      <div class="anchor-grid">
+
+        <div class="anchor-card industry">
+          <div class="anchor-top">
+            <div>
+              <div class="anchor-issuer">Google · Coursera</div>
+              <div class="anchor-name">Google Cybersecurity Certificate</div>
+            </div>
+            <div class="cert-pill progress">In Progress</div>
+          </div>
+          <div class="anchor-topics">
+            Foundations of cybersecurity · Network security · Linux & SQL · Threat detection · Incident response · Python automation
+          </div>
+          <div class="skill-tags">
+            <span class="tag">SIEM</span>
+            <span class="tag">IDS</span>
+            <span class="tag">Python</span>
+            <span class="tag">Packet Analysis</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TIER 2 — SKILL PATHS -->
     <div class="tier-block">
       <div class="tier-label">Tier 2 — Skill paths</div>
       <div class="path-list">
@@ -1084,7 +1354,7 @@
             <div class="path-name">SOC Analyst Learning Path</div>
             <div class="path-meta">LetsDefend · Alert triage · SIEM · Incident handling · Log analysis</div>
           </div>
-          <div class="cert-status active">COMPLETED</div>
+          <div class="cert-pill active">Completed</div>
           <div class="path-thumb" onclick="openCertLightbox(this)" data-label="SOC Analyst Learning Path — LetsDefend" data-src="ressources/certificates/3599705e-4208-4b9d-8c55-5040dc0efe09.png">
             <img src="ressources/certificates/3599705e-4208-4b9d-8c55-5040dc0efe09.png" alt="LetsDefend SOC Analyst Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
             <div class="path-thumb-label" style="display:none">CLICK<br/>TO<br/>VIEW</div>
@@ -1097,7 +1367,7 @@
             <div class="path-name">Malware Analysis Skill Path</div>
             <div class="path-meta">LetsDefend · Sandbox analysis · IOC extraction · Behavioural analysis</div>
           </div>
-          <div class="cert-status active">COMPLETED</div>
+          <div class="cert-pill active">Completed</div>
           <div class="path-thumb" onclick="openCertLightbox(this)" data-label="Malware Analysis Skill Path — LetsDefend" data-src="ressources/certificates/9d65cd77-4fea-4076-a19d-0d43b87618c0.png">
             <img src="ressources/certificates/9d65cd77-4fea-4076-a19d-0d43b87618c0.png" alt="LetsDefend Malware Analysis Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
             <div class="path-thumb-label" style="display:none">CLICK<br/>TO<br/>VIEW</div>
@@ -1110,7 +1380,7 @@
             <div class="path-name">DFIR Learning Path</div>
             <div class="path-meta">LetsDefend · Digital forensics · Incident response · Evidence handling</div>
           </div>
-          <div class="cert-status active">COMPLETED</div>
+          <div class="cert-pill active">Completed</div>
           <div class="path-thumb" onclick="openCertLightbox(this)" data-label="DFIR Learning Path — LetsDefend" data-src="ressources/certificates/64c4d96d-1c49-4363-bf12-c1a1b85be5cd.png">
             <img src="ressources/certificates/64c4d96d-1c49-4363-bf12-c1a1b85be5cd.png" alt="LetsDefend DFIR Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
             <div class="path-thumb-label" style="display:none">CLICK<br/>TO<br/>VIEW</div>
@@ -1123,7 +1393,7 @@
             <div class="path-name">Web Attack Detection &amp; Analysis</div>
             <div class="path-meta">LetsDefend · IDOR · Log4Shell · Spring4Shell · JWT attacks · SAML exploits</div>
           </div>
-          <div class="cert-status active">COMPLETED</div>
+          <div class="cert-pill active">Completed</div>
           <div class="path-thumb" onclick="openCertLightbox(this)" data-label="Web Attack Detection & Analysis — LetsDefend" data-src="ressources/certificates/f6a58246-58d2-4ecd-8c11-5d7a2e2a6b11.png">
             <img src="ressources/certificates/f6a58246-58d2-4ecd-8c11-5d7a2e2a6b11.png" alt="LetsDefend Web Attack Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
             <div class="path-thumb-label" style="display:none">CLICK<br/>TO<br/>VIEW</div>
@@ -1133,28 +1403,18 @@
       </div>
     </div>
 
-    <!-- ── TIER 3: FOUNDATIONAL COMPLETIONS ── -->
+    <!-- TIER 3 — FOUNDATIONAL COMPLETIONS -->
     <div class="tier-block">
       <div class="tier-label">Tier 3 — Foundational completions</div>
       <div class="badge-grid">
-
         <div class="badge-item">
           <div class="badge-dot done"></div>
           Cybersecurity for Students — LetsDefend
         </div>
-
-        <!-- Add NetAcad completions here as they come in, e.g:
-        <div class="badge-item">
-          <div class="badge-dot done"></div>
-          Introduction to Cybersecurity — Cisco NetAcad
-        </div>
-        -->
-
         <div class="badge-item">
           <div class="badge-dot pending"></div>
           Cisco NetAcad completions — coming soon
         </div>
-
       </div>
     </div>
 
@@ -1166,8 +1426,10 @@
   <div class="container">
     <div class="section-label" style="justify-content:center">06 // Contact</div>
     <h2>Let's Connect</h2>
-    <p style="color:var(--muted);font-size:0.95rem;max-width:480px;margin:0 auto;">
-      Currently seeking system administration or IT infrastructure internships, with strong interest in secure system operations.
+    <p style="color:var(--muted);font-size:0.95rem;max-width:520px;margin:0 auto;">
+      Seeking a junior sysadmin or entry-level SOC analyst role. Open to
+      opportunities in IT infrastructure, secure system operations, or
+      blue team environments.
     </p>
     <div class="contact-links">
       <a href="mailto:omarbashar01@gmail.com" class="contact-link">✉ omarbashar01@gmail.com</a>
@@ -1176,7 +1438,6 @@
       <a href="tel:+250793216790" class="contact-link">✆ +250 793 216 790</a>
       <a href="https://tryhackme.com/p/shadowadmin" class="contact-link">TryHackMe</a>
     </div>
-
     <div class="terminal" id="terminal">
       <div id="terminal-content"></div>
     </div>
@@ -1186,11 +1447,6 @@
 <footer>
   © 2026 Bashar Mohamed Omar — Kigali, Rwanda — Built for the web, designed for defense.
 </footer>
-
-<style>
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-</style>
-
 
 <script>
 function openCertLightbox(el) {
@@ -1212,7 +1468,7 @@ function openCertLightbox(el) {
   } else {
     lbImg.style.display = 'none';
     lbPh.style.display = 'flex';
-    lbLabel.textContent = label + '\n\nPlace your certificate image at:\nassets/certs/';
+    lbLabel.textContent = label;
   }
   lb.classList.add('open');
 }
@@ -1221,63 +1477,44 @@ function closeCertLightbox() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCertLightbox(); });
 </script>
+
 <script>
 const lines = [
-  { type: "input", text: "whoami" },
-  { type: "output", text: "system_administrator_&_blue_team_analyst_in_training" },
-  { type: "input", text: "cat goals.txt" },
-  { type: "output", text: "→ 🛡️ system & network defense" },
-  { type: "output", text: "→ ⚙️ security operations" },
-  { type: "output", text: "→ 🏭 OT/ICS security" }
+  { type: "input",  text: "whoami" },
+  { type: "output", text: "sysadmin_&_blue_team_analyst" },
+  { type: "input",  text: "cat goals.txt" },
+  { type: "output", text: "→ 🛡️  system & network defense" },
+  { type: "output", text: "→ ⚙️  security operations" },
+  { type: "output", text: "→ 🏭  OT/ICS security" }
 ];
-
 const terminal = document.getElementById("terminal-content");
-
-let lineIndex = 0;
-let charIndex = 0;
-
+let lineIndex = 0, charIndex = 0;
 function typeLine() {
-  if (lineIndex >= lines.length) {
-    addCursor();
-    return;
-  }
-
+  if (lineIndex >= lines.length) { addCursor(); return; }
   const line = lines[lineIndex];
-
   if (charIndex === 0) {
     const div = document.createElement("div");
-
-    if (line.type === "input") {
-      div.innerHTML = `<span class="prompt">bashar@kigali</span>:<span class="cmd">~</span>$ <span class="typing"></span>`;
-    } else {
-      div.innerHTML = `<span class="out typing"></span>`;
-    }
-
+    div.innerHTML = line.type === "input"
+      ? `<span class="prompt">bashar@kigali</span>:<span class="cmd">~</span>$ <span class="typing"></span>`
+      : `<span class="out typing"></span>`;
     terminal.appendChild(div);
   }
-
   const currentLine = terminal.lastChild.querySelector(".typing");
   currentLine.textContent += line.text[charIndex];
-
   charIndex++;
-
   if (charIndex < line.text.length) {
-    setTimeout(typeLine, 20); // typing speed
+    setTimeout(typeLine, 20);
   } else {
-    charIndex = 0;
-    lineIndex++;
+    charIndex = 0; lineIndex++;
     setTimeout(typeLine, 300);
   }
 }
-
 function addCursor() {
-  const cursorLine = document.createElement("div");
-  cursorLine.innerHTML = `<span class="prompt">bashar@kigali</span>:<span class="cmd">~</span>$ <span class="cursor">█</span>`;
-  terminal.appendChild(cursorLine);
+  const div = document.createElement("div");
+  div.innerHTML = `<span class="prompt">bashar@kigali</span>:<span class="cmd">~</span>$ <span class="cursor">█</span>`;
+  terminal.appendChild(div);
 }
-
 typeLine();
 </script>
 </body>
-
 </html>
